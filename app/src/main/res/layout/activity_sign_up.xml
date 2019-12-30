@@ -8,6 +8,15 @@
     android:orientation="vertical"
     android:background="@drawable/background_color">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_marginTop="-6dp"
+        android:visibility="invisible"/>
+
     <EditText
         android:layout_width="250dp"
         android:layout_height="wrap_content"

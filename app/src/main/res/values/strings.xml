@@ -1,7 +1,21 @@
 <resources>
-    <string name="app_name">UnionApp</string>
+    <string name="app_name">Union</string>
 
-    <!-- InsertActivity -->
+    <!-- Navigation Menu -->
+    <string name="menu_home">Home</string>
+    <string name="menu_show_members">Toon leden</string>
+    <string name="menu_add_member">Voeg lid toe</string>
+    <string name="menu_logout">Meld af</string>
+    <string name="title_activity_home_drawer">HomeDrawerActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="showMembers">Toon leden</string>
+    <string name="insertMember">Voeg lid toe</string>
+    <string name="logout">Meld af</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- InsertFragment -->
     <string name="firstname">Voornaam</string>
     <string name="lastname">Achternaam</string>
     <string name="dateSelector">Selecteer geboortedatum</string>
@@ -11,7 +25,8 @@
     <string name="city">Gemeente</string>
     <string name="telephone">Telefoonnummer (bijv. 012345678)</string>
     <string name="instrument">Instrument</string>
-    <string name="register">Voeg lid toe</string>
+    <string name="register">Voeg toe</string>
+    <string name="back">Ga terug</string>
 
     <!-- SingUpActivity & LoginActivity -->
     <string name="email">E-mailadres</string>
@@ -21,25 +36,27 @@
     <string name="alreadyAccount">Al een account? Meld je hier aan</string>
     <string name="noAccount">Nog geen account? Klik hier</string>
 
-    <!-- HomeActivity -->
-    <string name="showMembers">Toon leden</string>
-    <string name="insertMember">Voeg lid toe</string>
-    <string name="logout">Meld af</string>
-    <string name="title_activity_home_drawer">HomeDrawerActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <!-- HomeFragment -->
+    <string name="welcome">Welkom bij</string>
 
-    <!-- Navigation Menu -->
-    <string name="menu_home">Home</string>
-    <string name="menu_show_members">Toon leden</string>
-    <string name="menu_add_member">Voeg lid toe</string>
-    <string name="menu_logout">Meld af</string>
-
-    <!-- Logout Fragment -->
+    <!-- LogoutFragment -->
     <string name="loggingout">Je wordt afgemeld.</string>
     <string name="goodbye">Tot de volgende keer!</string>
+
+    <!-- DetailActivity -->
+    <string name="detail_firstname">Voornaam</string>
+    <string name="detail_lastname">Achternaam</string>
+    <string name="detail_birthdate">Geboortedatum</string>
+    <string name="detail_address">Straat + huisnummer</string>
+    <string name="detail_postalCode">Postcode</string>
+    <string name="detail_city">Gemeente</string>
+    <string name="detail_telephone">Telefoonnummer</string>
+    <string name="detail_instrument">Instrument</string>
+    <string name="button_back">Ga terug</string>
+    <string name="button_update">Wijzig</string>
+    <string name="button_delete">Verwijder</string>
+
+    <!-- UpdateActivity -->
+    <string name="btnUpdate">Wijzig</string>
+    <string name="btnBack">Ga terug</string>
 </resources>

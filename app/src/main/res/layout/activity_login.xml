@@ -9,7 +9,7 @@
     android:background="@drawable/background_color"
     android:id="@+id/loginActivity">
 
-    <!--
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -18,7 +18,7 @@
         android:indeterminate="true"
         android:layout_marginTop="-6dp"
         android:visibility="invisible"/>
-        -->
+
 
     <EditText
         android:layout_width="250dp"

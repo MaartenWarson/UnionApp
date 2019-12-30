@@ -1,56 +1,97 @@
-package be.pxl.unionapp.activities.ui.home;
+package be.pxl.unionapp.activities;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+
 import java.util.Calendar;
+
 import be.pxl.unionapp.R;
-import be.pxl.unionapp.activities.MainActivity;
 import be.pxl.unionapp.data.FirebaseDatabaseHelper;
 import be.pxl.unionapp.domain.Member;
 
-public class InsertFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
+public class UpdateActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener{
 
-    private View root;
-    private EditText etFirstname, etLastname, etAddress, etPostalCode, etCity, etTelephone, etInstrument;
-    private TextView tvDisplayDate;
-    private Button btnRegister;
-    private FirebaseDatabaseHelper databaseHelper;
-    private Member member;
-    private boolean dateSelected;
+    Button btnUpdate, btnBack;
+    EditText etFirstname, etLastname, etAddress, etPostalCode, etCity, etTelephone, etInstrument;
+    TextView tvBirthdate;
+    String memberId, firstname, lastname, birthdate, address, postalCode, city, telephoneString, instrument;
+    long telephone;
+    Member member;
+    boolean dateSelected;
+    FirebaseDatabaseHelper databaseHelper;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_insert, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_update);
 
         init();
+        fillFields();
 
-        // OnClickListeners declareren
-        tvDisplayDate.setOnClickListener(this);
-        btnRegister.setOnClickListener(this);
-
-        return root;
+        btnUpdate.setOnClickListener(this);
+        btnBack.setOnClickListener(this);
+        tvBirthdate.setOnClickListener(this);
     }
 
-    // OnClickListeners initialiseren
     public void onClick(View v) {
-        if (v.getId() == R.id.tvDateSelector) {
+        if (v.getId() == R.id.btnUpdate) {
+            updateMember();
+        }
+        else if (v.getId() == R.id.btnBack) {
+            finish();
+        }
+        else if (v.getId() == R.id.tvDateSelector) {
             showDatePickerDialog();
         }
-        else if (v.getId() == R.id.btnRegister) {
-            addMember();
-        }
+    }
+
+    private void init() {
+        btnUpdate = findViewById(R.id.btnUpdate);
+        btnBack = findViewById(R.id.btnBack);
+        etFirstname = findViewById(R.id.etFirstname);
+        etLastname = findViewById(R.id.etLastname);
+        tvBirthdate = findViewById(R.id.tvDateSelector);
+        etAddress = findViewById(R.id.etAddress);
+        etPostalCode = findViewById(R.id.etPostalCode);
+        etCity = findViewById(R.id.etCity);
+        etTelephone = findViewById(R.id.etTelephone);
+        etInstrument = findViewById(R.id.etInstrument);
+        member = new Member();
+        dateSelected = true;
+        databaseHelper = new FirebaseDatabaseHelper();
+    }
+
+    private void fillFields() {
+        memberId = getIntent().getStringExtra("memberId");
+        firstname = getIntent().getStringExtra("firstname");
+        lastname = getIntent().getStringExtra("lastname");
+        birthdate = "Geboortedatum: " + getIntent().getStringExtra("birthdate");
+        address = getIntent().getStringExtra("address");
+        postalCode = getIntent().getStringExtra("postalCode");
+        city = getIntent().getStringExtra("city");
+        telephone = getIntent().getLongExtra("telephone", 0);
+        telephoneString = "0" + telephone;
+        instrument = getIntent().getStringExtra("instrument");
+
+        etFirstname.setText(firstname);
+        etLastname.setText(lastname);
+        tvBirthdate.setText(birthdate);
+        etAddress.setText(address);
+        etPostalCode.setText(postalCode);
+        etCity.setText(city);
+        etTelephone.setText(telephoneString);
+        etInstrument.setText(instrument);
     }
 
     private void showDatePickerDialog() {
@@ -59,29 +100,29 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog dialog = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_LIGHT, this, year, month, day);
+        DatePickerDialog dialog = new DatePickerDialog(UpdateActivity.this, AlertDialog.THEME_HOLO_LIGHT, this, year, month, day);
         dialog.show();
     }
 
     @Override // Deze methode wordt opgeroepen wanneer een datum geselecteerd wordt in de DatePickerDialog
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         dateSelected = true;
-        tvDisplayDate.setError(null);
+        tvBirthdate.setError(null);
         String date = "" + dayOfMonth + "/" + (month + 1) + "/" + year;
         String result = "Geboortedatum: " + date;
 
         member.setBirthdate(date);
-        tvDisplayDate.setText(result);
+        tvBirthdate.setText(result);
     }
 
-    private void addMember() {
+    private void updateMember() {
         if (checkUserInputValidity()) {
             InitializeMember();
-            databaseHelper.addMember(member);
+            databaseHelper.updateMember(member);
 
-            Toast.makeText(getActivity(), member.getFirstname() + " " + member.getLastname() + " is toegevoegd", Toast.LENGTH_LONG).show();
+            Toast.makeText(UpdateActivity.this, member.getFirstname() + " " + member.getLastname() + " is gewijzigd", Toast.LENGTH_LONG).show();
 
-            goToMainActivity();
+            goToDetailsActivity();
         }
     }
 
@@ -101,7 +142,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         }
 
         if (!dateSelected) {
-            tvDisplayDate.setError("Selecteer uw geboortedatum");
+            tvBirthdate.setError("Selecteer uw geboortedatum");
             inputIsValid = false;
         }
 
@@ -150,32 +191,32 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         return inputIsValid;
     }
 
-    private void goToMainActivity() {
-        Intent intentToHomeSreen = new Intent(getActivity(), MainActivity.class);
-        startActivity(intentToHomeSreen);
-    }
-
-    private void init() {
-        etFirstname = root.findViewById(R.id.etFirstname);
-        etLastname = root.findViewById(R.id.etLastname);
-        tvDisplayDate = root.findViewById(R.id.tvDateSelector);
-        etAddress = root.findViewById(R.id.etAddress);
-        etPostalCode = root.findViewById(R.id.etPostcalCode);
-        etCity = root.findViewById(R.id.etCity);
-        etTelephone = root.findViewById(R.id.etTelephone);
-        etInstrument = root.findViewById(R.id.etInstrument);
-        btnRegister = root.findViewById(R.id.btnRegister);
-        databaseHelper = new FirebaseDatabaseHelper();
-        member = new Member();
-    }
-
     private void InitializeMember() {
+        member.setMemberId(memberId);
         member.setFirstname(etFirstname.getText().toString().trim());
         member.setLastname(etLastname.getText().toString().trim());
         member.setAddress(etAddress.getText().toString().trim());
+        String birthdateTextView = tvBirthdate.getText().toString().trim();
+        birthdateTextView = birthdateTextView.substring(15);
+        member.setBirthdate(birthdateTextView);
         member.setPostalCode(etPostalCode.getText().toString().trim());
         member.setCity(etCity.getText().toString().trim());
         member.setTelephone(Long.parseLong(etTelephone.getText().toString().trim()));
         member.setInstrument(etInstrument.getText().toString().trim());
+    }
+
+    private void goToDetailsActivity() {
+        Intent intentToDetailsActivity = new Intent(UpdateActivity.this, DetailActivity.class);
+        intentToDetailsActivity.putExtra("memberId", member.getMemberId());
+        intentToDetailsActivity.putExtra("firstname", member.getFirstname());
+        intentToDetailsActivity.putExtra("lastname", member.getLastname());
+        intentToDetailsActivity.putExtra("birthdate", member.getBirthdate());
+        intentToDetailsActivity.putExtra("address", member.getAddress());
+        intentToDetailsActivity.putExtra("postalCode", member.getPostalCode());
+        intentToDetailsActivity.putExtra("city", member.getCity());
+        intentToDetailsActivity.putExtra("telephone", member.getTelephone());
+        intentToDetailsActivity.putExtra("instrument", member.getInstrument());
+
+        startActivity(intentToDetailsActivity);
     }
 }

@@ -1,6 +1,7 @@
 package be.pxl.unionapp.domain;
 
 public class Member {
+    private String memberId;
     private String firstname;
     private String lastname;
     private String birthdate;
@@ -12,6 +13,14 @@ public class Member {
 
     public Member() {
 
+    }
+
+    public String getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
     }
 
     public String getFirstname() {

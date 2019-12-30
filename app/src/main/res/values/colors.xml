@@ -6,4 +6,5 @@
     <color name="lightgray">#E7E7E7</color>
     <color name="lightgrayTransparant">#95E7E7E7</color>
     <color name="darkblue">#19284D</color>
+    <color name="darkred">#660000</color>
 </resources>

@@ -19,9 +19,21 @@
         android:visibility="invisible"/>
         -->
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvWelcome"
+        android:text="@string/welcome"
+        android:textColor="@color/darkblue"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="150dp"/>
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/union_logo" />
+        android:src="@drawable/union_logo"
+        android:layout_marginTop="-200dp"/>
 
 </LinearLayout>
