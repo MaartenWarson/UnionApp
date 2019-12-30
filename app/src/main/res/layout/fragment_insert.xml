@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_color">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etFirstname"
+        android:hint="@string/firstname"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="21sp"
+        android:textColorHint="@color/lightgrayTransparant"
+        android:backgroundTint="@color/lightgray"
+        android:textCursorDrawable="@color/lightgray"
+        android:textColor="@color/lightgray"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etLastname"
+        android:hint="@string/lastname"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:textSize="21sp"
+        android:textColorHint="@color/lightgrayTransparant"
+        android:backgroundTint="@color/lightgray"
+        android:textCursorDrawable="@color/lightgray"
+        android:textColor="@color/lightgray"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvDateSelector"
+        android:hint="@string/dateSelector"
+        android:layout_marginStart="21dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="21sp"
+        android:textColorHint="@color/lightgrayTransparant"
+        android:textColor="@color/lightgray" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etAddress"
+        android:hint="@string/address"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:textSize="21sp"
+        android:textColorHint="@color/lightgrayTransparant"
+        android:backgroundTint="@color/lightgray"
+        android:textCursorDrawable="@color/lightgray"
+        android:textColor="@color/lightgray"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etPostcalCode"
+        android:hint="@string/postcalCode"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:textSize="21sp"
+        android:textColorHint="@color/lightgrayTransparant"
+        android:backgroundTint="@color/lightgray"
+        android:textCursorDrawable="@color/lightgray"
+        android:textColor="@color/lightgray"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etCity"
+        android:hint="@string/city"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:textSize="21sp"
+        android:textColorHint="@color/lightgrayTransparant"
+        android:backgroundTint="@color/lightgray"
+        android:textCursorDrawable="@color/lightgray"
+        android:textColor="@color/lightgray"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etTelephone"
+        android:hint="@string/telephone"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:textSize="21sp"
+        android:textColorHint="@color/lightgrayTransparant"
+        android:backgroundTint="@color/lightgray"
+        android:textCursorDrawable="@color/lightgray"
+        android:textColor="@color/lightgray"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etInstrument"
+        android:hint="@string/instrument"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:textSize="21sp"
+        android:textColorHint="@color/lightgrayTransparant"
+        android:backgroundTint="@color/lightgray"
+        android:textCursorDrawable="@color/lightgray"
+        android:textColor="@color/lightgray"/>
+
+    <Button
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/btnRegister"
+        android:text="@string/register"
+        android:background="@color/darkblue"
+        android:textColor="@color/lightgray"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>

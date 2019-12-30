@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1008184206495",
+    "firebase_url": "https://unionapp-593a5.firebaseio.com",
+    "project_id": "unionapp-593a5",
+    "storage_bucket": "unionapp-593a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1008184206495:android:05ff8a9b6bc5e82d20eeaa",
+        "android_client_info": {
+          "package_name": "be.pxl.unionapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1008184206495-ud5m2h25n5ds1tbm99jv9i4mh6g79ph4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLbILyRVMqY9Q0YzAPUPN-tTovML2ItQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1008184206495-ud5m2h25n5ds1tbm99jv9i4mh6g79ph4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
