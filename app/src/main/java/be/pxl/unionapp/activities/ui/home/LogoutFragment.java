@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import be.pxl.unionapp.R;
 import be.pxl.unionapp.activities.LoginActivity;
 
+// Dit scherm wordt heel even(!) getoond wanneer een gebruik afmeldt
 public class LogoutFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -22,8 +23,11 @@ public class LogoutFragment extends Fragment {
     }
 
     private void logout() {
+        // Afmelden
         FirebaseAuth.getInstance().signOut();
-        Intent intentToLogin = new Intent(getActivity(), LoginActivity.class);
-        startActivity(intentToLogin);
+
+        // Naar LoginActivity gaan
+        Intent intentToLoginActivity = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intentToLoginActivity);
     }
 }

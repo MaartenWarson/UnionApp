@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#19284D</color>
-    <color name="colorPrimaryDark">#19284D</color>
+    <!-- Niet in gebruik -->
+    <color name="colorPrimary">#22DB00</color>
+    <!-- Niet in gebruik -->
+    <color name="colorPrimaryDark">#9000C9</color>
+    <!-- Niet in gebruik -->
     <color name="colorAccent">#D81B60</color>
+
     <color name="lightgray">#E7E7E7</color>
     <color name="lightgrayTransparant">#95E7E7E7</color>
     <color name="darkblue">#19284D</color>
     <color name="darkred">#660000</color>
+    <color name="blueTransparant">#4DABE9DD</color>
 </resources>

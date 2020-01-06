@@ -13,7 +13,7 @@
     <string name="showMembers">Toon leden</string>
     <string name="insertMember">Voeg lid toe</string>
     <string name="logout">Meld af</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Instellingen</string>
 
     <!-- InsertFragment -->
     <string name="firstname">Voornaam</string>
@@ -27,6 +27,7 @@
     <string name="instrument">Instrument</string>
     <string name="register">Voeg toe</string>
     <string name="back">Ga terug</string>
+    <string name="imageSelector">Selecteer profielfoto</string>
 
     <!-- SingUpActivity & LoginActivity -->
     <string name="email">E-mailadres</string>
@@ -35,6 +36,7 @@
     <string name="login">Meld aan</string>
     <string name="alreadyAccount">Al een account? Meld je hier aan</string>
     <string name="noAccount">Nog geen account? Klik hier</string>
+    <string name="rememberMe">Onthoud gebruikersnaam en wachtwoord</string>
 
     <!-- HomeFragment -->
     <string name="welcome">Welkom bij</string>
@@ -55,8 +57,14 @@
     <string name="button_back">Ga terug</string>
     <string name="button_update">Wijzig</string>
     <string name="button_delete">Verwijder</string>
+    <string name="dummyData">Dummy</string>
 
     <!-- UpdateActivity -->
     <string name="btnUpdate">Wijzig</string>
     <string name="btnBack">Ga terug</string>
+
+    <!-- Keys voor shared preferences -->
+    <string name="preferencesCheckbox">be.pxl.unionapp.checkbox</string>
+    <string name="preferencesEmail">be.pxl.unionapp.email</string>
+    <string name="preferencesPassword">be.pxl.unionapp.password</string>
 </resources>

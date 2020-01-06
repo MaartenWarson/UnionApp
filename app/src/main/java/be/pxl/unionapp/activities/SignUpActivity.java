@@ -17,8 +17,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import be.pxl.unionapp.R;
 
+// In deze activity wordt een account aangemaakt als de gebruiker zelf nog geen account heeft
 public class SignUpActivity extends AppCompatActivity  implements View.OnClickListener {
-    // DECLARATIES
     EditText etEmail, etPassword;
     Button btnSignUp;
     TextView tvAlreadyAccount;
@@ -30,6 +30,7 @@ public class SignUpActivity extends AppCompatActivity  implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        setTitle(R.string.signUp);
 
         init();
 
@@ -38,13 +39,24 @@ public class SignUpActivity extends AppCompatActivity  implements View.OnClickLi
         tvAlreadyAccount.setOnClickListener(this);
     }
 
+    private void init() {
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        btnSignUp = findViewById(R.id.btnSignUp);
+        tvAlreadyAccount = findViewById(R.id.tvAlreadyAccount);
+        firebaseAuth = FirebaseAuth.getInstance();
+        progressBar = findViewById(R.id.progressBar);
+    }
+
     // OnClickListeners initialiseren
     public void onClick(View v) {
         if (v.getId() == R.id.btnSignUp) {
+            // Nieuwe gebruiker aanmaken
             startSignUpProcess();
         }
         else if (v.getId() == R.id.tvAlreadyAccount) {
-            goToLoginScreen();
+            // Wanneer de gebruiker al een account heeft, wordt deze naar de LoginActivity gestuurd
+            goToLoginActivity();
         }
     }
 
@@ -64,6 +76,7 @@ public class SignUpActivity extends AppCompatActivity  implements View.OnClickLi
             etPassword.requestFocus();
         }
         else {
+            // Wanneer alles goed is ingevuld, wordt de BackgroundExecuter uitgevoerd om ervoor te zorgen dat de Progressbar goed getoond wordt
             new BackgroundExecuter().execute();
         }
     }
@@ -78,40 +91,35 @@ public class SignUpActivity extends AppCompatActivity  implements View.OnClickLi
                 }
                 else {
                     // Als gebruiker toegevoegd is, word je verder gestuurd naar HomeActivity
-                    Intent intentToHome = new Intent(SignUpActivity.this, MainActivity.class);
-                    startActivity(intentToHome);
+                    Intent intentToMainActivity = new Intent(SignUpActivity.this, MainActivity.class);
+                    startActivity(intentToMainActivity);
                 }
             }
         });
     }
 
-    private void goToLoginScreen() {
-        Intent intentToLogin = new Intent(SignUpActivity.this, LoginActivity.class);
-        startActivity(intentToLogin);
+    private void goToLoginActivity() {
+        Intent intentToLoginActivity = new Intent(SignUpActivity.this, LoginActivity.class);
+        startActivity(intentToLoginActivity);
     }
 
-    private void init() {
-        etEmail = findViewById(R.id.etEmail);
-        etPassword = findViewById(R.id.etPassword);
-        btnSignUp = findViewById(R.id.btnSignUp);
-        tvAlreadyAccount = findViewById(R.id.tvAlreadyAccount);
-        firebaseAuth = FirebaseAuth.getInstance();
-        progressBar = findViewById(R.id.progressBar);
-    }
 
     public class BackgroundExecuter extends AsyncTask<String, Void, Void> {
+        // VOOR het uivoeren van de taak
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
         }
 
+        // Het uitvoeren van de taak
         @Override
         protected Void doInBackground(String... strings) {
             signUp();
             return null;
         }
 
+        // NA het uivoeren van de taak
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);

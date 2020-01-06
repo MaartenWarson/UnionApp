@@ -32,7 +32,7 @@ public class ReadFragment extends Fragment{
         new FirebaseDatabaseHelper().readMembers(new DataStatus() {
             @Override // Wanneer de data geladen is...
             public void DataIsLoaded(List<Member> members, List<String> keys) {
-                root.findViewById(R.id.progressBar_read).setVisibility(View.GONE);
+                root.findViewById(R.id.progressBar_read).setVisibility(View.GONE); // ProgressBar verwijderen
                 new RecyclerView_Config().setConfig(recyclerView, getContext(), members, keys);
             }
         });

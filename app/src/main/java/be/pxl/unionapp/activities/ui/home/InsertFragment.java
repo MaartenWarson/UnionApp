@@ -3,6 +3,7 @@ package be.pxl.unionapp.activities.ui.home;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,22 +14,32 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import java.util.Calendar;
 import be.pxl.unionapp.R;
 import be.pxl.unionapp.activities.MainActivity;
 import be.pxl.unionapp.data.FirebaseDatabaseHelper;
 import be.pxl.unionapp.domain.Member;
 
+// Fragment om een nieuw lid toe te voegen
 public class InsertFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private View root;
     private EditText etFirstname, etLastname, etAddress, etPostalCode, etCity, etTelephone, etInstrument;
-    private TextView tvDisplayDate;
+    private TextView tvDisplayDate, tvImageSelector;
     private Button btnRegister;
     private FirebaseDatabaseHelper databaseHelper;
     private Member member;
-    private boolean dateSelected;
+    private boolean dateSelected, imageSelected;
+    private static final int PICK_IMAGE_REQUEST = 123; // random nummer
+    private Uri filePath;
+    private StorageReference storageReference;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,20 +50,45 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         // OnClickListeners declareren
         tvDisplayDate.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
+        tvImageSelector.setOnClickListener(this);
 
+        // In fragments moet een View teruggegeven worden
         return root;
+    }
+
+    private void init() {
+        etFirstname = root.findViewById(R.id.etFirstname);
+        etLastname = root.findViewById(R.id.etLastname);
+        tvDisplayDate = root.findViewById(R.id.tvDateSelector);
+        etAddress = root.findViewById(R.id.etAddress);
+        etPostalCode = root.findViewById(R.id.etPostcalCode);
+        etCity = root.findViewById(R.id.etCity);
+        etTelephone = root.findViewById(R.id.etTelephone);
+        etInstrument = root.findViewById(R.id.etInstrument);
+        btnRegister = root.findViewById(R.id.btnRegister);
+        databaseHelper = new FirebaseDatabaseHelper();
+        member = new Member();
+        tvImageSelector = root.findViewById(R.id.tvImageSelector);
+        storageReference = FirebaseStorage.getInstance().getReference();
     }
 
     // OnClickListeners initialiseren
     public void onClick(View v) {
         if (v.getId() == R.id.tvDateSelector) {
+            // Datum selecteren
             showDatePickerDialog();
         }
         else if (v.getId() == R.id.btnRegister) {
+            // Lid toevoegen aan de database
             addMember();
+        }
+        else if (v.getId() == R.id.tvImageSelector) {
+            // Dialoogvenster openen om afbeelding te selecteren
+            showFileChooser();
         }
     }
 
+    // Dialoogvenster tonen om een datum te selecteren
     private void showDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -63,7 +99,8 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         dialog.show();
     }
 
-    @Override // Deze methode wordt opgeroepen wanneer een datum geselecteerd wordt in de DatePickerDialog
+    // Deze methode wordt opgeroepen wanneer een datum geselecteerd wordt in de showDatePickerDialog()-methode
+    @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         dateSelected = true;
         tvDisplayDate.setError(null);
@@ -77,10 +114,13 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
     private void addMember() {
         if (checkUserInputValidity()) {
             InitializeMember();
+            uploadProfilePicture();
+            
+            // Lid toevoegen aan database
             databaseHelper.addMember(member);
-
+            
+            // Wanneer lid succesvol is toegevoegd aan database...
             Toast.makeText(getActivity(), member.getFirstname() + " " + member.getLastname() + " is toegevoegd", Toast.LENGTH_LONG).show();
-
             goToMainActivity();
         }
     }
@@ -147,26 +187,38 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
             inputIsValid = false;
         }
 
+        if (!imageSelected) {
+            tvImageSelector.setError("Selecteer een afbeelding");
+            inputIsValid = false;
+        }
+
         return inputIsValid;
     }
 
     private void goToMainActivity() {
-        Intent intentToHomeSreen = new Intent(getActivity(), MainActivity.class);
-        startActivity(intentToHomeSreen);
+        Intent intentToMainActivity = new Intent(getActivity(), MainActivity.class);
+        startActivity(intentToMainActivity);
     }
 
-    private void init() {
-        etFirstname = root.findViewById(R.id.etFirstname);
-        etLastname = root.findViewById(R.id.etLastname);
-        tvDisplayDate = root.findViewById(R.id.tvDateSelector);
-        etAddress = root.findViewById(R.id.etAddress);
-        etPostalCode = root.findViewById(R.id.etPostcalCode);
-        etCity = root.findViewById(R.id.etCity);
-        etTelephone = root.findViewById(R.id.etTelephone);
-        etInstrument = root.findViewById(R.id.etInstrument);
-        btnRegister = root.findViewById(R.id.btnRegister);
-        databaseHelper = new FirebaseDatabaseHelper();
-        member = new Member();
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Selecteer een afbeelding"), PICK_IMAGE_REQUEST);
+    }
+
+    // Deze methode wordt uitgevoerd als de gebruiker een afbeelding geselecteerd heeft in showFileChooser()-methode
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
+            filePath = data.getData();
+            String message = "Profielfoto geselecteerd";
+            tvImageSelector.setText(message);
+            tvImageSelector.setError(null);
+            imageSelected = true;
+        }
     }
 
     private void InitializeMember() {
@@ -177,5 +229,26 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         member.setCity(etCity.getText().toString().trim());
         member.setTelephone(Long.parseLong(etTelephone.getText().toString().trim()));
         member.setInstrument(etInstrument.getText().toString().trim());
+    }
+
+    // Profielfoto uploaden naar Firebase Storage
+    private void uploadProfilePicture() {
+        if (filePath != null) {
+            String pictureName = member.getMemberId();
+            storageReference = storageReference.child(pictureName);
+
+            storageReference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // Foto toevoegen aan storage = succesvol
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // Foto toevoegen aan storage = mislukt
+                    Toast.makeText(getContext(), "Er is iets fout gegaan bij het uploaden van de profielfoto. Probeer opnieuw", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

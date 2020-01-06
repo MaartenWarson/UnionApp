@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1008184206495-8ji1n8pk53i9qlie5c010cv232atadgo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "be.pxl.unionapp",
+            "certificate_hash": "88ce127b5c6060ee9796df8fb8a11a0cf1585c7f"
+          }
+        },
+        {
           "client_id": "1008184206495-ud5m2h25n5ds1tbm99jv9i4mh6g79ph4.apps.googleusercontent.com",
           "client_type": 3
         }

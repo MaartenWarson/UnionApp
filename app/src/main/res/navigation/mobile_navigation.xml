@@ -15,11 +15,13 @@
         android:id="@+id/nav_add_member"
         android:name="be.pxl.unionapp.activities.ui.home.InsertFragment"
         android:label="@string/menu_add_member" />
+
     <fragment
         android:id="@+id/nav_show_members"
         android:name="be.pxl.unionapp.activities.ui.home.ReadFragment"
         android:label="@string/menu_show_members"
         tools:layout="@layout/fragment_read" />
+
     <fragment
         android:id="@+id/nav_logout"
         android:name="be.pxl.unionapp.activities.ui.home.LogoutFragment"

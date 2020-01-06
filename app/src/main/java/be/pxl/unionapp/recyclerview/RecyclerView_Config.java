@@ -2,18 +2,21 @@ package be.pxl.unionapp.recyclerview;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import java.util.List;
-
 import be.pxl.unionapp.R;
 import be.pxl.unionapp.activities.DetailActivity;
 import be.pxl.unionapp.domain.Member;
@@ -21,6 +24,7 @@ import be.pxl.unionapp.domain.Member;
 public class RecyclerView_Config {
     private Context context;
     private MembersAdapter membersAdapter;
+    private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
     public void setConfig(RecyclerView recyclerView, Context context, List<Member> members, List<String> keys) {
         this.context = context;
@@ -29,14 +33,11 @@ public class RecyclerView_Config {
         recyclerView.setAdapter(membersAdapter);
     }
 
-    public Context getContext() {
-        return context;
-    }
-
-
+    // INNER CLASS
     class MemberItemView extends RecyclerView.ViewHolder{
         private TextView tvName, tvInstrument;
         private LinearLayout linearLayout;
+        private ImageView ivProfilePicture;
         String key;
 
         public MemberItemView(ViewGroup parent) {
@@ -45,18 +46,34 @@ public class RecyclerView_Config {
             tvName = itemView.findViewById(R.id.item_name);
             tvInstrument = itemView.findViewById(R.id.item_instrument);
             linearLayout = itemView.findViewById(R.id.member_list_item);
+            ivProfilePicture = itemView.findViewById(R.id.ivPicture);
         }
 
         public void bind(Member member, String key) {
             String name = member.getFirstname() + " " + member.getLastname();
             tvName.setText(name);
             tvInstrument.setText(member.getInstrument());
+            fillImageView(member);
             this.key = key;
+        }
+
+        private void fillImageView(Member member) {
+            String imageName = member.getMemberId();
+            StorageReference storageRef = storageReference.child(imageName);
+
+            final long ONE_MEGABYTE = 1024 * 1024;
+            storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    ivProfilePicture.setImageBitmap(bitmap);
+                }
+            });
         }
     }
 
 
-    // Deze klasse creëert de member_item_view
+    // INNER CLASS - Deze klasse creëert de member_item_view
     class MembersAdapter extends RecyclerView.Adapter<MemberItemView> {
         private List<Member> members;
         private List<String> keys;
@@ -79,7 +96,11 @@ public class RecyclerView_Config {
                 @Override
                 public void onClick(View v) {
                     Member member = members.get(position);
+
+                    // Intent naar DetailActivity maken
                     Intent intentToDetailsActivity = new Intent(context, DetailActivity.class);
+
+                    // Gegevens meegegeven aan de intent
                     intentToDetailsActivity.putExtra("memberId", member.getMemberId());
                     intentToDetailsActivity.putExtra("firstname", member.getFirstname());
                     intentToDetailsActivity.putExtra("lastname", member.getLastname());
@@ -90,6 +111,7 @@ public class RecyclerView_Config {
                     intentToDetailsActivity.putExtra("telephone", member.getTelephone());
                     intentToDetailsActivity.putExtra("instrument", member.getInstrument());
 
+                    // Intent opstarten
                     context.startActivity(intentToDetailsActivity);
                 }
             });

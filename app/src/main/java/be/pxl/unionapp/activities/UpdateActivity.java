@@ -1,28 +1,38 @@
 package be.pxl.unionapp.activities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import java.io.IOException;
 import java.util.Calendar;
-
 import be.pxl.unionapp.R;
 import be.pxl.unionapp.data.FirebaseDatabaseHelper;
 import be.pxl.unionapp.domain.Member;
 
 public class UpdateActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener{
 
-    Button btnUpdate, btnBack;
+    Button btnUpdate;
     EditText etFirstname, etLastname, etAddress, etPostalCode, etCity, etTelephone, etInstrument;
     TextView tvBirthdate;
     String memberId, firstname, lastname, birthdate, address, postalCode, city, telephoneString, instrument;
@@ -30,35 +40,27 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
     Member member;
     boolean dateSelected;
     FirebaseDatabaseHelper databaseHelper;
+    ImageView ivProfilePicture;
+    StorageReference storageReference;
+    static final int PICK_IMAGE_REQUEST = 124;
+    Uri filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         init();
-        fillFields();
+        fillFieldsWithData();
 
         btnUpdate.setOnClickListener(this);
-        btnBack.setOnClickListener(this);
         tvBirthdate.setOnClickListener(this);
-    }
-
-    public void onClick(View v) {
-        if (v.getId() == R.id.btnUpdate) {
-            updateMember();
-        }
-        else if (v.getId() == R.id.btnBack) {
-            finish();
-        }
-        else if (v.getId() == R.id.tvDateSelector) {
-            showDatePickerDialog();
-        }
+        ivProfilePicture.setOnClickListener(this);
     }
 
     private void init() {
         btnUpdate = findViewById(R.id.btnUpdate);
-        btnBack = findViewById(R.id.btnBack);
         etFirstname = findViewById(R.id.etFirstname);
         etLastname = findViewById(R.id.etLastname);
         tvBirthdate = findViewById(R.id.tvDateSelector);
@@ -70,9 +72,12 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         member = new Member();
         dateSelected = true;
         databaseHelper = new FirebaseDatabaseHelper();
+        ivProfilePicture = findViewById(R.id.ivUpdateProfilePicture);
+        storageReference = FirebaseStorage.getInstance().getReference();
     }
 
-    private void fillFields() {
+    private void fillFieldsWithData() {
+        // Data verzamelen die aan de Intent (vanuit DetailActivity) waren meegegeven
         memberId = getIntent().getStringExtra("memberId");
         firstname = getIntent().getStringExtra("firstname");
         lastname = getIntent().getStringExtra("lastname");
@@ -84,6 +89,11 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         telephoneString = "0" + telephone;
         instrument = getIntent().getStringExtra("instrument");
 
+        // Titel van ActionBar aanpassen
+        String titleName = "Wijzig gegevens";
+        setTitle(titleName);
+
+        // Verzamelde data in de tekstvakken zetten
         etFirstname.setText(firstname);
         etLastname.setText(lastname);
         tvBirthdate.setText(birthdate);
@@ -92,27 +102,49 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         etCity.setText(city);
         etTelephone.setText(telephoneString);
         etInstrument.setText(instrument);
+
+        // Foto tonen in de imageView
+        fillImageView();
     }
 
-    private void showDatePickerDialog() {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+    private void fillImageView() {
+        String imageName = memberId;
+        StorageReference storageRef = storageReference.child(imageName);
 
-        DatePickerDialog dialog = new DatePickerDialog(UpdateActivity.this, AlertDialog.THEME_HOLO_LIGHT, this, year, month, day);
-        dialog.show();
+        final long ONE_MEGABYTE = 1024 * 1024;
+        storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                ivProfilePicture.setImageBitmap(bitmap);
+            }
+        });
     }
 
-    @Override // Deze methode wordt opgeroepen wanneer een datum geselecteerd wordt in de DatePickerDialog
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        dateSelected = true;
-        tvBirthdate.setError(null);
-        String date = "" + dayOfMonth + "/" + (month + 1) + "/" + year;
-        String result = "Geboortedatum: " + date;
+    public void onClick(View v) {
+        if (v.getId() == R.id.btnUpdate) {
+            // Gegevens van lid wijzigen
+            updateMember();
+        }
+        else if (v.getId() == R.id.tvDateSelector) {
+            // Dialoogvenster tonen om data te selecteren
+            showDatePickerDialog();
+        }
+        else if (v.getId() == R.id.ivUpdateProfilePicture) {
+            // Dialoogvenster tonen om afbeelding te selecteren
+            showFileChooser();
+        }
+    }
 
-        member.setBirthdate(date);
-        tvBirthdate.setText(result);
+    // Wanneer er op het pijltje in de ActionBar wordt geklikt ...
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void updateMember() {
@@ -205,8 +237,80 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         member.setInstrument(etInstrument.getText().toString().trim());
     }
 
+    private void showDatePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(UpdateActivity.this, AlertDialog.THEME_HOLO_LIGHT, this, year, month, day);
+        dialog.show();
+    }
+
+    // Deze methode wordt opgeroepen wanneer een datum geselecteerd wordt in de DatePickerDialog()-methode
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        dateSelected = true;
+        tvBirthdate.setError(null);
+        String date = "" + dayOfMonth + "/" + (month + 1) + "/" + year;
+        String result = "Geboortedatum: " + date;
+
+        member.setBirthdate(date);
+        tvBirthdate.setText(result);
+    }
+
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Selecteer een afbeelding"), PICK_IMAGE_REQUEST);
+    }
+
+    // Deze methode wordt uitgevoerd als de gebruiker een afbeelding geselecteerd heeft in showFileChooser()-methode
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            // Afbeelding uploaden in database. Dit wordt hier al gedaan omdat er een beetje vertraging zit in het updaten van de foto in de storage zelf
+            uploadPicture();
+
+            // Toon geselecteerde afbeelding in ImageView
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                ivProfilePicture.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Foto in de storage zetten
+    private void uploadPicture() {
+        if (filePath != null) {
+            String pictureName = memberId;
+            storageReference = storageReference.child(pictureName);
+
+            storageReference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(UpdateActivity.this, "Er is iets fout gegaan bij het uploaden van de profielfoto. Probeer opnieuw", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
     private void goToDetailsActivity() {
+        // Intent aanmaken
         Intent intentToDetailsActivity = new Intent(UpdateActivity.this, DetailActivity.class);
+
+        // Gegevens meegeven aan de intent
         intentToDetailsActivity.putExtra("memberId", member.getMemberId());
         intentToDetailsActivity.putExtra("firstname", member.getFirstname());
         intentToDetailsActivity.putExtra("lastname", member.getLastname());
@@ -217,6 +321,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         intentToDetailsActivity.putExtra("telephone", member.getTelephone());
         intentToDetailsActivity.putExtra("instrument", member.getInstrument());
 
+        // Intent opstarten
         startActivity(intentToDetailsActivity);
     }
 }
