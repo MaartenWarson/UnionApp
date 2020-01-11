@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <EditText
@@ -22,7 +22,8 @@
             android:textColorHint="@color/lightgrayTransparant"
             android:backgroundTint="@color/lightgray"
             android:textCursorDrawable="@color/lightgray"
-            android:textColor="@color/lightgray"/>
+            android:textColor="@color/lightgray"
+            style="@style/editTextDisableEnter"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -35,10 +36,11 @@
             android:textColorHint="@color/lightgrayTransparant"
             android:backgroundTint="@color/lightgray"
             android:textCursorDrawable="@color/lightgray"
-            android:textColor="@color/lightgray"/>
+            android:textColor="@color/lightgray"
+            style="@style/editTextDisableEnter"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvDateSelector"
             android:hint="@string/dateSelector"
@@ -61,7 +63,8 @@
             android:textColorHint="@color/lightgrayTransparant"
             android:backgroundTint="@color/lightgray"
             android:textCursorDrawable="@color/lightgray"
-            android:textColor="@color/lightgray"/>
+            android:textColor="@color/lightgray"
+            style="@style/editTextDisableEnter"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -74,7 +77,8 @@
             android:textColorHint="@color/lightgrayTransparant"
             android:backgroundTint="@color/lightgray"
             android:textCursorDrawable="@color/lightgray"
-            android:textColor="@color/lightgray"/>
+            android:textColor="@color/lightgray"
+            style="@style/editTextDisableEnter"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -87,7 +91,8 @@
             android:textColorHint="@color/lightgrayTransparant"
             android:backgroundTint="@color/lightgray"
             android:textCursorDrawable="@color/lightgray"
-            android:textColor="@color/lightgray"/>
+            android:textColor="@color/lightgray"
+            style="@style/editTextDisableEnter"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -100,7 +105,8 @@
             android:textColorHint="@color/lightgrayTransparant"
             android:backgroundTint="@color/lightgray"
             android:textCursorDrawable="@color/lightgray"
-            android:textColor="@color/lightgray"/>
+            android:textColor="@color/lightgray"
+            style="@style/editTextDisableEnter"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -113,30 +119,55 @@
             android:textColorHint="@color/lightgrayTransparant"
             android:backgroundTint="@color/lightgray"
             android:textCursorDrawable="@color/lightgray"
-            android:textColor="@color/lightgray"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvImageSelector"
-            android:hint="@string/imageSelector"
-            android:layout_marginStart="21dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="8dp"
-            android:textSize="21sp"
-            android:textColorHint="@color/lightgrayTransparant"
-            android:textColor="@color/lightgray" />
-
-        <Button
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/btnRegister"
-            android:text="@string/register"
-            android:background="@color/darkblue"
             android:textColor="@color/lightgray"
-            android:layout_marginTop="20dp"/>
+            style="@style/editTextDisableEnter"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp">
+
+                <ImageView
+                    android:id="@+id/ivProfilePicture"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:background="@color/blueTransparant"
+                    />
+
+                <TextView
+                    android:id="@+id/tvImageSelector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:hint="@string/imageSelector"
+                    android:textColor="@color/lightgray"
+                    android:textColorHint="@color/lightgrayTransparant"
+                    android:textSize="21sp"
+                    android:textAlignment="center"/>
+            </RelativeLayout>
+
+            <Button
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/btnRegister"
+                android:text="@string/register"
+                android:background="@color/darkblue"
+                android:textColor="@color/lightgray"
+                android:layout_marginTop="60dp"
+                android:layout_marginStart="50dp" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </ScrollView>

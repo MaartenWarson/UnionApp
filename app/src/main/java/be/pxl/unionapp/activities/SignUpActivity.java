@@ -88,6 +88,7 @@ public class SignUpActivity extends AppCompatActivity  implements View.OnClickLi
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
                     Toast.makeText(SignUpActivity.this, "Account kan niet aangemaakt worden. Probeer opnieuw", Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
                 else {
                     // Als gebruiker toegevoegd is, word je verder gestuurd naar HomeActivity

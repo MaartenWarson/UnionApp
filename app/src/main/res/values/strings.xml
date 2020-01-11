@@ -27,7 +27,7 @@
     <string name="instrument">Instrument</string>
     <string name="register">Voeg toe</string>
     <string name="back">Ga terug</string>
-    <string name="imageSelector">Selecteer profielfoto</string>
+    <string name="imageSelector">Selecteer \nprofielfoto</string>
 
     <!-- SingUpActivity & LoginActivity -->
     <string name="email">E-mailadres</string>
@@ -67,4 +67,6 @@
     <string name="preferencesCheckbox">be.pxl.unionapp.checkbox</string>
     <string name="preferencesEmail">be.pxl.unionapp.email</string>
     <string name="preferencesPassword">be.pxl.unionapp.password</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
 </resources>

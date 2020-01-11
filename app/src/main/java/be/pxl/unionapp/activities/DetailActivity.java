@@ -52,7 +52,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         tvCity = findViewById(R.id.city_database);
         tvTelephone = findViewById(R.id.telephone_database);
         tvInstrument = findViewById(R.id.instrument_database);
-        //btnBack = findViewById(R.id.btnBack);
         btnUpdate = findViewById(R.id.btnUpdate);
         btnDelete = findViewById(R.id.btnDelete);
         storageReference = FirebaseStorage.getInstance().getReference();

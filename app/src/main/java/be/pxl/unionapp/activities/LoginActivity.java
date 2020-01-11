@@ -169,6 +169,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Gebruikersnaam en/of wachtwoord zijn incorrect. Probeer opnieuw", Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
                 else {
                     Intent intentToMainActivityToMainActivity = new Intent(LoginActivity.this, MainActivity.class);

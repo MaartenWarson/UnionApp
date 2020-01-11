@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_color">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/etFirstname"
+                android:hint="@string/firstname"
+                android:layout_marginStart="75dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp"
+                android:textSize="21sp"
+                android:width="250dp"
+                android:textColorHint="@color/lightgrayTransparant"
+                android:backgroundTint="@color/lightgray"
+                android:textCursorDrawable="@color/lightgray"
+                android:textColor="@color/lightgray"
+                android:imeOptions="flagNoExtractUi"
+                style="@style/editTextDisableEnter"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etLastname"
+                android:hint="@string/lastname"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="75dp"
+                android:textSize="21sp"
+                android:textColorHint="@color/lightgrayTransparant"
+                android:backgroundTint="@color/lightgray"
+                android:textCursorDrawable="@color/lightgray"
+                android:textColor="@color/lightgray"
+                android:imeOptions="flagNoExtractUi"
+                style="@style/editTextDisableEnter"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvDateSelector"
+            android:hint="@string/dateSelector"
+            android:layout_marginStart="78dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="21sp"
+            android:textColorHint="@color/lightgrayTransparant"
+            android:textColor="@color/lightgray" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etAddress"
+            android:hint="@string/address"
+            android:layout_marginStart="75dp"
+            android:layout_marginEnd="75dp"
+            android:textSize="21sp"
+            android:textColorHint="@color/lightgrayTransparant"
+            android:backgroundTint="@color/lightgray"
+            android:textCursorDrawable="@color/lightgray"
+            android:textColor="@color/lightgray"
+            android:imeOptions="flagNoExtractUi"
+            style="@style/editTextDisableEnter"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/etPostcalCode"
+                android:hint="@string/postcalCode"
+                android:layout_marginStart="75dp"
+                android:layout_marginEnd="20dp"
+                android:textSize="21sp"
+                android:width="120dp"
+                android:textColorHint="@color/lightgrayTransparant"
+                android:backgroundTint="@color/lightgray"
+                android:textCursorDrawable="@color/lightgray"
+                android:textColor="@color/lightgray"
+                android:imeOptions="flagNoExtractUi"
+                style="@style/editTextDisableEnter"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etCity"
+                android:hint="@string/city"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="75dp"
+                android:textSize="21sp"
+                android:textColorHint="@color/lightgrayTransparant"
+                android:backgroundTint="@color/lightgray"
+                android:textCursorDrawable="@color/lightgray"
+                android:textColor="@color/lightgray"
+                android:imeOptions="flagNoExtractUi"
+                style="@style/editTextDisableEnter"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/etTelephone"
+                android:hint="@string/telephone"
+                android:layout_marginStart="75dp"
+                android:layout_marginEnd="20dp"
+                android:textSize="21sp"
+                android:textColorHint="@color/lightgrayTransparant"
+                android:backgroundTint="@color/lightgray"
+                android:textCursorDrawable="@color/lightgray"
+                android:textColor="@color/lightgray"
+                android:imeOptions="flagNoExtractUi"
+                style="@style/editTextDisableEnter"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etInstrument"
+                android:hint="@string/instrument"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="75dp"
+                android:textSize="21sp"
+                android:textColorHint="@color/lightgrayTransparant"
+                android:backgroundTint="@color/lightgray"
+                android:textCursorDrawable="@color/lightgray"
+                android:textColor="@color/lightgray"
+                android:imeOptions="flagNoExtractUi"
+                style="@style/editTextDisableEnter"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="75dp">
+
+                <ImageView
+                    android:id="@+id/ivProfilePicture"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:background="@color/blueTransparant"
+                    />
+
+                <TextView
+                    android:id="@+id/tvImageSelector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:hint="@string/imageSelector"
+                    android:textColor="@color/lightgray"
+                    android:textColorHint="@color/lightgrayTransparant"
+                    android:textSize="21sp"
+                    android:textAlignment="center"
+                    android:layout_marginBottom="20dp"/>
+            </RelativeLayout>
+
+            <Button
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnRegister"
+                android:text="@string/register"
+                android:background="@color/darkblue"
+                android:textColor="@color/lightgray"
+                android:layout_marginTop="125dp"
+                android:layout_marginStart="250dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="20dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

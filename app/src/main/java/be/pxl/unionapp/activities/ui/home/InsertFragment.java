@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -33,12 +34,14 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
     private View root;
     private EditText etFirstname, etLastname, etAddress, etPostalCode, etCity, etTelephone, etInstrument;
     private TextView tvDisplayDate, tvImageSelector;
+    private ImageView ivProfilePicture;
     private Button btnRegister;
     private FirebaseDatabaseHelper databaseHelper;
     private Member member;
+    private String date;
     private boolean dateSelected, imageSelected;
     private static final int PICK_IMAGE_REQUEST = 123; // random nummer
-    private Uri filePath;
+    private Uri image;
     private StorageReference storageReference;
 
     @Override
@@ -50,7 +53,11 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         // OnClickListeners declareren
         tvDisplayDate.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
-        tvImageSelector.setOnClickListener(this);
+        ivProfilePicture.setOnClickListener(this);
+
+        if (savedInstanceState != null) {
+            restoreSavedInstanceStates(savedInstanceState);
+        }
 
         // In fragments moet een View teruggegeven worden
         return root;
@@ -65,11 +72,43 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         etCity = root.findViewById(R.id.etCity);
         etTelephone = root.findViewById(R.id.etTelephone);
         etInstrument = root.findViewById(R.id.etInstrument);
+        ivProfilePicture = root.findViewById(R.id.ivProfilePicture);
         btnRegister = root.findViewById(R.id.btnRegister);
         databaseHelper = new FirebaseDatabaseHelper();
         member = new Member();
         tvImageSelector = root.findViewById(R.id.tvImageSelector);
         storageReference = FirebaseStorage.getInstance().getReference();
+    }
+
+    // Sla instance states op
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Geboortedatum
+        outState.putString("my_birthdate_string", tvDisplayDate.getText().toString());
+        outState.putBoolean("my_birthdate_boolean", dateSelected);
+        outState.putString("my_birthdate", date);
+
+        // Profielfoto
+        outState.putBoolean("my_profilepicture_boolean", imageSelected);
+        outState.putParcelable("my_profilepicture", image);
+    }
+
+    // Laad opgeslagen instance states in
+    private void restoreSavedInstanceStates(Bundle savedInstanceState) {
+        // Geboortedatum
+        tvDisplayDate.setText(savedInstanceState.getString("my_birthdate_string"));
+        dateSelected = savedInstanceState.getBoolean("my_birthdate_boolean");
+        date = savedInstanceState.getString("my_birthdate");
+
+        // Profielfoto
+        imageSelected = savedInstanceState.getBoolean("my_profilepicture_boolean");
+        image = savedInstanceState.getParcelable("my_profilepicture");
+        if (image != null) {
+            ivProfilePicture.setImageURI(image);
+            tvImageSelector.setVisibility(View.INVISIBLE);
+        }
     }
 
     // OnClickListeners initialiseren
@@ -82,7 +121,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
             // Lid toevoegen aan de database
             addMember();
         }
-        else if (v.getId() == R.id.tvImageSelector) {
+        else if (v.getId() == R.id.ivProfilePicture) {
             // Dialoogvenster openen om afbeelding te selecteren
             showFileChooser();
         }
@@ -104,21 +143,20 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         dateSelected = true;
         tvDisplayDate.setError(null);
-        String date = "" + dayOfMonth + "/" + (month + 1) + "/" + year;
+        date = "" + dayOfMonth + "/" + (month + 1) + "/" + year;
         String result = "Geboortedatum: " + date;
 
-        member.setBirthdate(date);
         tvDisplayDate.setText(result);
     }
 
     private void addMember() {
         if (checkUserInputValidity()) {
             InitializeMember();
-            uploadProfilePicture();
-            
+
             // Lid toevoegen aan database
             databaseHelper.addMember(member);
-            
+            uploadProfilePicture();
+
             // Wanneer lid succesvol is toegevoegd aan database...
             Toast.makeText(getActivity(), member.getFirstname() + " " + member.getLastname() + " is toegevoegd", Toast.LENGTH_LONG).show();
             goToMainActivity();
@@ -213,9 +251,9 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
-            filePath = data.getData();
-            String message = "Profielfoto geselecteerd";
-            tvImageSelector.setText(message);
+            image = data.getData();
+            tvImageSelector.setVisibility(View.INVISIBLE);
+            ivProfilePicture.setImageURI(image);
             tvImageSelector.setError(null);
             imageSelected = true;
         }
@@ -224,6 +262,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
     private void InitializeMember() {
         member.setFirstname(etFirstname.getText().toString().trim());
         member.setLastname(etLastname.getText().toString().trim());
+        member.setBirthdate(date);
         member.setAddress(etAddress.getText().toString().trim());
         member.setPostalCode(etPostalCode.getText().toString().trim());
         member.setCity(etCity.getText().toString().trim());
@@ -233,11 +272,11 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
 
     // Profielfoto uploaden naar Firebase Storage
     private void uploadProfilePicture() {
-        if (filePath != null) {
+        if (image != null) {
             String pictureName = member.getMemberId();
             storageReference = storageReference.child(pictureName);
 
-            storageReference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            storageReference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // Foto toevoegen aan storage = succesvol
@@ -250,5 +289,6 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
                 }
             });
         }
+
     }
 }
