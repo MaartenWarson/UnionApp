@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,7 @@ public class SignUpActivity extends AppCompatActivity  implements View.OnClickLi
     FirebaseAuth firebaseAuth;
     ProgressBar progressBar;
     String email, password;
+    static final String TAG = "SignUpActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class SignUpActivity extends AppCompatActivity  implements View.OnClickLi
         setTitle(R.string.signUp);
 
         init();
+        Log.i(TAG, "Views initialized successfully");
 
         // OnClickListeners declareren
         btnSignUp.setOnClickListener(this);
@@ -66,14 +69,17 @@ public class SignUpActivity extends AppCompatActivity  implements View.OnClickLi
 
         if (email.isEmpty() && password.isEmpty()) {
             Toast.makeText(this, "Vul beide velden in", Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Fields not filled in correctly");
         }
         else if (email.isEmpty()) {
             etEmail.setError("Geef een e-mailadres in");
             etEmail.requestFocus(); // Focus leggen op deze EditText
+            Log.e(TAG, "Fields not filled in correctly");
         }
         else if (password.isEmpty()) {
             etPassword.setError("Geef een wachtwoord in");
             etPassword.requestFocus();
+            Log.e(TAG, "Fields not filled in correctly");
         }
         else {
             // Wanneer alles goed is ingevuld, wordt de BackgroundExecuter uitgevoerd om ervoor te zorgen dat de Progressbar goed getoond wordt
@@ -89,9 +95,11 @@ public class SignUpActivity extends AppCompatActivity  implements View.OnClickLi
                 if (!task.isSuccessful()) {
                     Toast.makeText(SignUpActivity.this, "Account kan niet aangemaakt worden. Probeer opnieuw", Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.INVISIBLE);
+                    Log.e(TAG, "Something went wrong creating the account");
                 }
                 else {
                     // Als gebruiker toegevoegd is, word je verder gestuurd naar HomeActivity
+                    Log.i(TAG, "Account created successfully");
                     Intent intentToMainActivity = new Intent(SignUpActivity.this, MainActivity.class);
                     startActivity(intentToMainActivity);
                 }

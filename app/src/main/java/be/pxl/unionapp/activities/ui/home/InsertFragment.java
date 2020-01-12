@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,12 +44,14 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
     private static final int PICK_IMAGE_REQUEST = 123; // random nummer
     private Uri image;
     private StorageReference storageReference;
+    private static final String TAG = "InsertFragment";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_insert, container, false);
 
         init();
+        Log.i(TAG, "All views initialized successfully");
 
         // OnClickListeners declareren
         tvDisplayDate.setOnClickListener(this);
@@ -57,6 +60,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
 
         if (savedInstanceState != null) {
             restoreSavedInstanceStates(savedInstanceState);
+            Log.i(TAG, "All instance states restored succesfully");
         }
 
         // In fragments moet een View teruggegeven worden
@@ -93,6 +97,8 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         // Profielfoto
         outState.putBoolean("my_profilepicture_boolean", imageSelected);
         outState.putParcelable("my_profilepicture", image);
+
+        Log.i(TAG, "All instance states saved successfully");
     }
 
     // Laad opgeslagen instance states in
@@ -136,11 +142,13 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
 
         DatePickerDialog dialog = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_LIGHT, this, year, month, day);
         dialog.show();
+        Log.i(TAG, "DatePicker opened successfully.");
     }
 
     // Deze methode wordt opgeroepen wanneer een datum geselecteerd wordt in de showDatePickerDialog()-methode
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Log.i(TAG, "Date selected successfully");
         dateSelected = true;
         tvDisplayDate.setError(null);
         date = "" + dayOfMonth + "/" + (month + 1) + "/" + year;
@@ -152,9 +160,11 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
     private void addMember() {
         if (checkUserInputValidity()) {
             InitializeMember();
+            Log.i(TAG, "Member initialized successfully");
 
             // Lid toevoegen aan database
             databaseHelper.addMember(member);
+            Log.i(TAG, "Member added to Firebase Database successfully");
             uploadProfilePicture();
 
             // Wanneer lid succesvol is toegevoegd aan database...
@@ -230,6 +240,12 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
             inputIsValid = false;
         }
 
+        if (inputIsValid) {
+            Log.i(TAG, "All input is valid");
+        } else {
+            Log.w(TAG, "Not all input is valid");
+        }
+
         return inputIsValid;
     }
 
@@ -243,6 +259,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Selecteer een afbeelding"), PICK_IMAGE_REQUEST);
+        Log.i(TAG, "Filechooser opened successfully");
     }
 
     // Deze methode wordt uitgevoerd als de gebruiker een afbeelding geselecteerd heeft in showFileChooser()-methode
@@ -251,6 +268,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
+            Log.i(TAG, "Image selected successfully");
             image = data.getData();
             tvImageSelector.setVisibility(View.INVISIBLE);
             ivProfilePicture.setImageURI(image);
@@ -279,16 +297,16 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
             storageReference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // Foto toevoegen aan storage = succesvol
+                    Log.i(TAG, "Image selected successfully");
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     // Foto toevoegen aan storage = mislukt
                     Toast.makeText(getContext(), "Er is iets fout gegaan bij het uploaden van de profielfoto. Probeer opnieuw", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Something went wrong uploading the image to Firebase Storage");
                 }
             });
         }
-
     }
 }

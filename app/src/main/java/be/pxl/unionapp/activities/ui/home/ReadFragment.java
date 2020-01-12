@@ -1,6 +1,7 @@
 package be.pxl.unionapp.activities.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ public class ReadFragment extends Fragment{
 
     private View root;
     private RecyclerView recyclerView;
+    private static final String TAG = "ReadFragment";
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_read, container, false);
@@ -34,6 +36,7 @@ public class ReadFragment extends Fragment{
             public void DataIsLoaded(List<Member> members, List<String> keys) {
                 root.findViewById(R.id.progressBar_read).setVisibility(View.GONE); // ProgressBar verwijderen
                 new RecyclerView_Config().setConfig(recyclerView, getContext(), members, keys);
+                Log.i(TAG, "Data loaded from Firebase Database successfully");
             }
         });
     }

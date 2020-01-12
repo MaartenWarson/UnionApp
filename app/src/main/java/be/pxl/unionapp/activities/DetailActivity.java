@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +31,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     Member member;
     StorageReference storageReference;
     ImageView ivProfilePicture;
+    private static final String TAG = "DetailActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         init();
+        Log.i(TAG, "Views initialized successfully");
         fillFieldsWithData();
+        Log.i(TAG, "Views filled with data successfully");
 
         btnUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
@@ -104,9 +108,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
+            Log.i(TAG, "Went back to previous acitivity successfully");
             return true;
         }
 
+        Log.e(TAG, "Something went wrong going back to the previous activity");
         return super.onOptionsItemSelected(item);
     }
 
@@ -121,6 +127,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 // Wanneer de foto succesvol gedownload is van de Firebase Storage, wordt deze in de ImageView gezet
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 ivProfilePicture.setImageBitmap(bitmap);
+                Log.i(TAG, "Image put in ImageView successfully");
             }
         });
     }
@@ -166,13 +173,14 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deleteMember(memberId); // Lid verwijderen uit database
+                Log.i(TAG, "Chose to delete the member");
             }
         });
 
         alertDialog.setNegativeButton("Nee", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                Log.i(TAG, "Chose not to delete the member");
             }
         });
 
@@ -186,6 +194,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         String toastMessage = member.getFirstname() + " " + member.getLastname() + " is verwijderd";
         Toast.makeText(DetailActivity.this, toastMessage, Toast.LENGTH_LONG).show();
+        Log.i(TAG, "Member deleted succesfully");
 
         deleteProfilePicture();
 
@@ -201,7 +210,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         pictureRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-
+                Log.i(TAG, "Profilepicture deleted successfully");
             }
         });
     }

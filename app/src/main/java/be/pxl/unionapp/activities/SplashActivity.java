@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+
 import be.pxl.unionapp.R;
 
 // Dit is het welkomsscherm van de applicatie
 public class SplashActivity extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 500;
+    private static final String TAG = "SplashActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +24,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 Intent intentToLoginActivity = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intentToLoginActivity);
+                Log.i(TAG, "Splash screen showed successfully");
                 finish();
             }
         }, SPLASH_TIME_OUT);

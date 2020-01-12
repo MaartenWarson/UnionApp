@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -44,6 +45,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
     StorageReference storageReference;
     static final int PICK_IMAGE_REQUEST = 124;
     Uri filePath;
+    static final String TAG = "UpdateActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         init();
+        Log.i(TAG, "Views initialized succesfully");
         fillFieldsWithData();
 
         btnUpdate.setOnClickListener(this);
@@ -153,6 +156,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
             databaseHelper.updateMember(member);
 
             Toast.makeText(UpdateActivity.this, member.getFirstname() + " " + member.getLastname() + " is gewijzigd", Toast.LENGTH_LONG).show();
+            Log.i(TAG, "Member updated successfully");
 
             goToDetailsActivity();
         }
@@ -220,6 +224,12 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
             inputIsValid = false;
         }
 
+        if (inputIsValid) {
+            Log.i(TAG, "Fields fileld in correctly");
+        } else {
+            Log.e(TAG, "Fields not filled in correctly");
+        }
+
         return inputIsValid;
     }
 
@@ -250,6 +260,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
     // Deze methode wordt opgeroepen wanneer een datum geselecteerd wordt in de DatePickerDialog()-methode
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Log.i(TAG, "Date selected successfully");
         dateSelected = true;
         tvBirthdate.setError(null);
         String date = "" + dayOfMonth + "/" + (month + 1) + "/" + year;
@@ -295,12 +306,13 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
             storageReference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
+                    Log.i(TAG, "Image uploaded to Firebase Storage successfully");
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(UpdateActivity.this, "Er is iets fout gegaan bij het uploaden van de profielfoto. Probeer opnieuw", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Something went wrong uploading the picture to Firebase Storage");
                 }
             });
         }

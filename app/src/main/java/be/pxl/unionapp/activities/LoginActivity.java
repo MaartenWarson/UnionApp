@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -35,6 +36,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String email, password;
     SharedPreferences preferences;
     SharedPreferences.Editor editor; // Om de sharedPreferences op te slaan
+    static final String TAG = "LoginActivity";
+
+    Button btnTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +47,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setTitle(R.string.login);
 
         init();
+        Log.i(TAG, "Views initialized successfully");
 
         // OnClickListeners declareren
         btnLogin.setOnClickListener(this);
         tvNoAccount.setOnClickListener(this);
+
+        btnTest.setOnClickListener(this);
     }
 
     private void init() {
@@ -65,6 +72,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editor = preferences.edit();
         checkSharedPreferences();
 
+        btnTest = findViewById(R.id.btnTest);
     }
 
     private void initializeAuthStateListener() {
@@ -107,6 +115,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             // Naar activity gaan om nieuwe gebruiker aan te maken
             goToSignUpActivity();
         }
+        else if (v.getId() == R.id.btnTest) {
+            //startActivity(new Intent(LoginActivity.this, ItemListActivity.class));
+        }
     }
 
     // Loginproces starten
@@ -116,15 +127,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (email.isEmpty() && password.isEmpty()) {
             Toast.makeText(this, "Vul beide velden in", Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Fields not filled in correctly");
         }
         else if (email.isEmpty()) {
             etEmail.setError("Geef een e-mailadres in");
             etEmail.requestFocus(); // Focus leggen op deze EditText
+            Log.e(TAG, "Fields not filled in correctly");
         }
         else if (password.isEmpty()) {
-
             etPassword.setError("Geef een wachtwoord in");
             etPassword.requestFocus();
+            Log.e(TAG, "Fields not filled in correctly");
         }
         else {
             // SharedPreferences opslaan
@@ -160,6 +173,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             editor.putString(getString(R.string.preferencesPassword), "");
             editor.commit();
         }
+
+        Log.i(TAG, "Shared Preferences saves successfully");
     }
 
     private void login() {
@@ -170,8 +185,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (!task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Gebruikersnaam en/of wachtwoord zijn incorrect. Probeer opnieuw", Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.INVISIBLE);
+                    Log.e(TAG, "Something went wrong logging in");
                 }
                 else {
+                    Log.i(TAG, "Logged in successfully");
                     Intent intentToMainActivityToMainActivity = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intentToMainActivityToMainActivity);
                 }
