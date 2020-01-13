@@ -15,6 +15,8 @@ import be.pxl.unionapp.data.FirebaseDatabaseHelper;
 import be.pxl.unionapp.domain.Member;
 import be.pxl.unionapp.recyclerview.RecyclerView_Config;
 
+
+// DEZE FRAGMENT WORDT NIET MEER GEBRUIKT! => MemberListActivity
 public class ReadFragment extends Fragment{
 
     private View root;

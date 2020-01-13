@@ -51,19 +51,18 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         root = inflater.inflate(R.layout.fragment_insert, container, false);
 
         init();
-        Log.i(TAG, "All views initialized successfully");
+        Log.i(TAG, "Initialized successfully");
 
-        // OnClickListeners declareren
         tvDisplayDate.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
         ivProfilePicture.setOnClickListener(this);
 
         if (savedInstanceState != null) {
             restoreSavedInstanceStates(savedInstanceState);
-            Log.i(TAG, "All instance states restored succesfully");
+
+            Log.i(TAG, "All instance states restored successfully");
         }
 
-        // In fragments moet een View teruggegeven worden
         return root;
     }
 
@@ -84,7 +83,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         storageReference = FirebaseStorage.getInstance().getReference();
     }
 
-    // Sla instance states op
+    // Sla instance states op bij het wijzigen van orientation
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -115,20 +114,27 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
             ivProfilePicture.setImageURI(image);
             tvImageSelector.setVisibility(View.INVISIBLE);
         }
+
+        Log.i(TAG, "All instances restored successfully");
     }
 
-    // OnClickListeners initialiseren
     public void onClick(View v) {
         if (v.getId() == R.id.tvDateSelector) {
             // Datum selecteren
+            Log.i(TAG, "Date selector clicked");
+
             showDatePickerDialog();
         }
         else if (v.getId() == R.id.btnRegister) {
             // Lid toevoegen aan de database
+            Log.i(TAG, "Register button clicked");
+
             addMember();
         }
         else if (v.getId() == R.id.ivProfilePicture) {
             // Dialoogvenster openen om afbeelding te selecteren
+            Log.i(TAG, "Profile picture selector clicked");
+
             showFileChooser();
         }
     }
@@ -142,6 +148,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
 
         DatePickerDialog dialog = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_LIGHT, this, year, month, day);
         dialog.show();
+
         Log.i(TAG, "DatePicker opened successfully.");
     }
 
@@ -149,11 +156,13 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Log.i(TAG, "Date selected successfully");
+
         dateSelected = true;
         tvDisplayDate.setError(null);
-        date = "" + dayOfMonth + "/" + (month + 1) + "/" + year;
-        String result = "Geboortedatum: " + date;
 
+        date = "" + dayOfMonth + "/" + (month + 1) + "/" + year;
+
+        String result = "Geboortedatum: " + date;
         tvDisplayDate.setText(result);
     }
 
@@ -165,6 +174,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
             // Lid toevoegen aan database
             databaseHelper.addMember(member);
             Log.i(TAG, "Member added to Firebase Database successfully");
+
             uploadProfilePicture();
 
             // Wanneer lid succesvol is toegevoegd aan database...
@@ -241,9 +251,9 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         }
 
         if (inputIsValid) {
-            Log.i(TAG, "All input is valid");
+            Log.i(TAG, "Input is valid");
         } else {
-            Log.w(TAG, "Not all input is valid");
+            Log.w(TAG, "Input is not valid");
         }
 
         return inputIsValid;
@@ -304,6 +314,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
                 public void onFailure(@NonNull Exception e) {
                     // Foto toevoegen aan storage = mislukt
                     Toast.makeText(getContext(), "Er is iets fout gegaan bij het uploaden van de profielfoto. Probeer opnieuw", Toast.LENGTH_SHORT).show();
+
                     Log.e(TAG, "Something went wrong uploading the image to Firebase Storage");
                 }
             });

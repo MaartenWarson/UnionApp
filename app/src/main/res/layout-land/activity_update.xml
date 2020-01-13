@@ -85,7 +85,7 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/etPostcalCode"
+                android:id="@+id/etPostalCode"
                 android:hint="@string/postcalCode"
                 android:layout_marginStart="75dp"
                 android:layout_marginEnd="20dp"
@@ -151,48 +151,29 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginStart="75dp"
+            android:layout_marginEnd="75dp"
+            android:layout_marginBottom="75dp"
+            android:layout_marginTop="20dp">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginStart="75dp">
-
-                <ImageView
-                    android:id="@+id/ivProfilePicture"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:background="@color/blueTransparant"
-                    />
-
-                <TextView
-                    android:id="@+id/tvImageSelector"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:hint="@string/imageSelector"
-                    android:textColor="@color/lightgray"
-                    android:textColorHint="@color/lightgrayTransparant"
-                    android:textSize="21sp"
-                    android:textAlignment="center"
-                    android:layout_marginBottom="20dp"/>
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/ivUpdateProfilePicture"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:background="@color/blueTransparant"/>
 
             <Button
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/btnRegister"
-                android:text="@string/register"
+                android:id="@+id/btnUpdate"
+                android:text="@string/button_update"
                 android:background="@color/darkblue"
                 android:textColor="@color/lightgray"
-                android:layout_marginTop="125dp"
-                android:layout_marginStart="250dp"
-                android:layout_marginEnd="0dp"
+                android:layout_marginTop="100dp"
+                android:layout_marginStart="220dp"
                 android:layout_marginBottom="20dp"/>
 
         </LinearLayout>

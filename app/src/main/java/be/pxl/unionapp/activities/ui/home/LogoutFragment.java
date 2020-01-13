@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import be.pxl.unionapp.R;
 import be.pxl.unionapp.activities.LoginActivity;
 
-// Dit scherm wordt heel even(!) getoond wanneer een gebruik afmeldt
+// Dit scherm wordt heel even(!) getoond wanneer een gebruik afmeldt omdat met het sandwichmenu naar een Fragment genavigeerd moet worden, maar ik wil naar een Activity navigeren
 public class LogoutFragment extends Fragment {
     private static final String TAG = "LogoutFragment";
 

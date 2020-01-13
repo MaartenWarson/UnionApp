@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:divider="?android:attr/dividerHorizontal"
+    android:orientation="horizontal"
+    android:showDividers="middle"
+    tools:context=".activities.masterdetail.MemberListActivity">
+
+    <ProgressBar
+        android:id="@+id/progressBar_read"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_marginTop="-6dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_member_list"
+        android:name="be.pxl.mdtest.ItemListFragment"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager"
+        tools:context=".activities.masterdetail.MemberListActivity"
+        tools:listitem="@layout/member_list_content"
+        android:background="@drawable/background_color"/>
+    <!-- Ieder item wordt gevuld met member_list_content -->
+
+    <!-- Hier worden de details getoond -->
+    <FrameLayout
+        android:id="@+id/member_detail_landscape"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:background="@drawable/background_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/chooseMember"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"/>
+
+    </FrameLayout>
+
+</LinearLayout>

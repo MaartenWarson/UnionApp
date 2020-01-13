@@ -18,9 +18,9 @@
 
     <fragment
         android:id="@+id/nav_show_members"
-        android:name="be.pxl.unionapp.activities.ui.home.ReadFragment"
+        android:name="be.pxl.unionapp.activities.MasterDetailFragment"
         android:label="@string/menu_show_members"
-        tools:layout="@layout/fragment_read" />
+        tools:layout="@layout/fragment_master_detail" />
 
     <fragment
         android:id="@+id/nav_logout"

@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_color">
 
+    <!-- WORDT NIET MEER GEBRUIKT => activity_member_list -->
+
     <ProgressBar
         android:id="@+id/progressBar_read"
         style="?android:attr/progressBarStyleHorizontal"

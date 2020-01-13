@@ -1,9 +1,10 @@
-package be.pxl.unionapp.activities;
+package be.pxl.unionapp.activities.masterdetail;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -18,13 +19,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import be.pxl.unionapp.R;
+import be.pxl.unionapp.activities.UpdateActivity;
 import be.pxl.unionapp.data.FirebaseDatabaseHelper;
 import be.pxl.unionapp.domain.Member;
 
-// DEZE ACTIVITY WORDT NIET MEER GEBRUIKT => MemberDetailActivity / MemberDetaiLFragment
-// In deze activity worden alle gegevens van de leden getoond
-public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
-
+// DetailActivity - enkel in PORTRAIT (MemberDetaiLFragment is equivalent voor MemberDetailFragment)
+public class MemberDetailActivity extends AppCompatActivity implements View.OnClickListener {
     TextView tvBirthdate, tvAddress, tvPostalCode, tvCity, tvTelephone, tvInstrument;
     Button btnUpdate, btnDelete;
     String memberId, firstname, lastname, birthdate, address, postalCode, city, instrument;
@@ -37,16 +37,38 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
-        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.activity_member_detail);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Back-knop aan
+        Log.i(TAG, "Views created successfully");
+
+        // Als de oriëntatie van deze Activity wijzigt naar LANDSCAPE, wordt de gebruiker naar MemberListActivity gestuurd
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Log.i(TAG, "Activity put in landscape");
+            Intent intentToMemberListActivity = new Intent(MemberDetailActivity.this, MemberListActivity.class);
+            startActivity(intentToMemberListActivity);
+        }
 
         init();
-        Log.i(TAG, "Views initialized successfully");
+        Log.i(TAG, "Initialized successfully");
+
         fillFieldsWithData();
-        Log.i(TAG, "Views filled with data successfully");
+        Log.i(TAG, "Fields filled successfully");
 
         btnUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
+    }
+
+    // Wanneer er op het pijltje in de ActionBar wordt geklikt ...
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            Log.i(TAG, "Went back to previous activity successfully");
+            return true;
+        }
+
+        Log.e(TAG, "Something went wrong going back to the previous activity");
+        return super.onOptionsItemSelected(item);
     }
 
     private void init() {
@@ -64,7 +86,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void fillFieldsWithData() {
-        // Data verzamelen die aan de Intent (vanuit RecyclerView en/of UpdateActivity) waren meegegeven
+        // Data verzamelen die aan de Intent naar de huidige Activity (vanuit MemberListActivity) is meegegeven
         memberId = getIntent().getStringExtra("memberId");
         firstname = getIntent().getStringExtra("firstname");
         lastname = getIntent().getStringExtra("lastname");
@@ -79,7 +101,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         String name = firstname + " " + lastname;
         setTitle(name);
 
-        // Verzamelde data in de tekstvakken zetten
+        // Verzamelde data in de bijbehorende tekstvakken zetten
         tvBirthdate.setText(birthdate);
         tvAddress.setText(address);
         tvPostalCode.setText(postalCode);
@@ -92,31 +114,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         fillImageView();
     }
 
-    public void onClick(View v) {
-        if (v.getId() == R.id.btnUpdate) {
-            // Naar activity gaan om gegevens van lid te wijzigen
-            goToUpdateActivity();
-        }
-        else if (v.getId() == R.id.btnDelete) {
-            // Lid verwijderen
-            initializeMember();
-            createDeleteDialog(member.getMemberId());
-        }
-    }
-
-    // Wanneer er op het pijltje in de ActionBar wordt geklikt ...
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            Log.i(TAG, "Went back to previous acitivity successfully");
-            return true;
-        }
-
-        Log.e(TAG, "Something went wrong going back to the previous activity");
-        return super.onOptionsItemSelected(item);
-    }
-
     private void fillImageView() {
         String imageName = memberId;
         StorageReference storageRef = storageReference.child(imageName);
@@ -125,17 +122,37 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                // Wanneer de foto succesvol gedownload is van de Firebase Storage, wordt deze in de ImageView gezet
+                Log.i(TAG, "Image downloaded from Firebase Storage successfully");
+
+                // Foto in ImageView zetten
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 ivProfilePicture.setImageBitmap(bitmap);
-                Log.i(TAG, "Image put in ImageView successfully");
+
+                Log.i(TAG, "Image posted in ImageView successfully");
             }
         });
     }
 
+    public void onClick(View v) {
+        if (v.getId() == R.id.btnUpdate) {
+            // Naar Activity gaan om gegevens van lid te wijzigen
+            Log.i(TAG, "Update-button clicked");
+
+            goToUpdateActivity();
+        }
+        else if (v.getId() == R.id.btnDelete) {
+            // Lid verwijderen
+            Log.i(TAG, "Delete-button clicked");
+
+            initializeMember();
+            Log.i(TAG, "Delete: Member initialized successfully");
+
+            createDeleteDialog(member.getMemberId());
+        }
+    }
+
     private void goToUpdateActivity() {
-        // Intent maken
-        Intent intentToUpdateActivity = new Intent(DetailActivity.this, UpdateActivity.class);
+        Intent intentToUpdateActivity = new Intent(MemberDetailActivity.this, UpdateActivity.class);
 
         // Gegevens meegeven aan de intent die getoond moeten worden in UpdateActivity
         intentToUpdateActivity.putExtra("memberId", memberId);
@@ -170,18 +187,20 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         alertDialog.setMessage("Weet je zeker dat je " + member.getFirstname() + " " + member.getLastname() + " wilt verwijderen?");
         alertDialog.setCancelable(false);
 
+        // Mogelijke knoppen (JA/NEE)
         alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Log.i(TAG, "Delete member confirmed");
+
                 deleteMember(memberId); // Lid verwijderen uit database
-                Log.i(TAG, "Chose to delete the member");
             }
         });
 
         alertDialog.setNegativeButton("Nee", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.i(TAG, "Chose not to delete the member");
+                Log.i(TAG, "Delete member denied");
             }
         });
 
@@ -194,14 +213,14 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         databaseHelper.deleteMember();
 
         String toastMessage = member.getFirstname() + " " + member.getLastname() + " is verwijderd";
-        Toast.makeText(DetailActivity.this, toastMessage, Toast.LENGTH_LONG).show();
+        Toast.makeText(MemberDetailActivity.this, toastMessage, Toast.LENGTH_LONG).show();
         Log.i(TAG, "Member deleted succesfully");
 
         deleteProfilePicture();
 
-        // Naar MainActivity gaan
-        Intent intentToMainActivity = new Intent(DetailActivity.this, MainActivity.class);
-        startActivity(intentToMainActivity);
+        // Naar MemberListActivity gaan
+        Intent intentToMemberListActivity = new Intent(MemberDetailActivity.this, MemberListActivity.class);
+        startActivity(intentToMemberListActivity);
     }
 
     // Profielfoto van desbetreffend lid uit de storage verwijderen

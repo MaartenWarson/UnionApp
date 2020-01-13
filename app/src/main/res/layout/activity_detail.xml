@@ -6,6 +6,8 @@
     android:background="@drawable/background_color"
     android:orientation="vertical">
 
+    <!-- DEZE ACTIVITY WORDT NIET MEER GEBRUIKT => activity_member_detail/fragment_member_detail -->
+
     <!-- LinearLayout die de gegevens van het lid bevat (= linkse kolom van scherm) -->
     <LinearLayout
         android:layout_width="match_parent"

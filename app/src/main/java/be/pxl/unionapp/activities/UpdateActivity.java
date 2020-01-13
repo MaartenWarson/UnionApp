@@ -28,6 +28,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.util.Calendar;
 import be.pxl.unionapp.R;
+import be.pxl.unionapp.activities.masterdetail.MemberListActivity;
 import be.pxl.unionapp.data.FirebaseDatabaseHelper;
 import be.pxl.unionapp.domain.Member;
 
@@ -36,16 +37,16 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
     Button btnUpdate;
     EditText etFirstname, etLastname, etAddress, etPostalCode, etCity, etTelephone, etInstrument;
     TextView tvBirthdate;
-    String memberId, firstname, lastname, birthdate, address, postalCode, city, telephoneString, instrument;
+    String memberId, firstname, lastname, address, postalCode, city, instrument;
     long telephone;
     Member member;
     boolean dateSelected;
-    FirebaseDatabaseHelper databaseHelper;
     ImageView ivProfilePicture;
     StorageReference storageReference;
     static final int PICK_IMAGE_REQUEST = 124;
     Uri filePath;
     static final String TAG = "UpdateActivity";
+    String date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +56,16 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
 
         init();
         Log.i(TAG, "Views initialized succesfully");
+
         fillFieldsWithData();
 
         btnUpdate.setOnClickListener(this);
         tvBirthdate.setOnClickListener(this);
         ivProfilePicture.setOnClickListener(this);
+
+        if (savedInstanceState != null) {
+            restoreSavedInstanceStates(savedInstanceState);
+        }
     }
 
     private void init() {
@@ -72,11 +78,24 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         etCity = findViewById(R.id.etCity);
         etTelephone = findViewById(R.id.etTelephone);
         etInstrument = findViewById(R.id.etInstrument);
-        member = new Member();
         dateSelected = true;
-        databaseHelper = new FirebaseDatabaseHelper();
         ivProfilePicture = findViewById(R.id.ivUpdateProfilePicture);
         storageReference = FirebaseStorage.getInstance().getReference();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Gewijzigde geboortedatum
+        outState.putString("my_birthdate", date);
+    }
+
+    private void restoreSavedInstanceStates(Bundle savedInstanceState) {
+        // Gewijzigde geboortedatum
+        date = savedInstanceState.getString("my_birthdate");
+        String birthdateString = "Geboortedatum: " + date;
+        tvBirthdate.setText(birthdateString);
     }
 
     private void fillFieldsWithData() {
@@ -84,25 +103,26 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         memberId = getIntent().getStringExtra("memberId");
         firstname = getIntent().getStringExtra("firstname");
         lastname = getIntent().getStringExtra("lastname");
-        birthdate = "Geboortedatum: " + getIntent().getStringExtra("birthdate");
+        date = getIntent().getStringExtra("birthdate");
         address = getIntent().getStringExtra("address");
         postalCode = getIntent().getStringExtra("postalCode");
         city = getIntent().getStringExtra("city");
         telephone = getIntent().getLongExtra("telephone", 0);
-        telephoneString = "0" + telephone;
         instrument = getIntent().getStringExtra("instrument");
 
         // Titel van ActionBar aanpassen
-        String titleName = "Wijzig gegevens";
+        String titleName = "Wijzig gegevens van " + firstname + " " + lastname;
         setTitle(titleName);
 
         // Verzamelde data in de tekstvakken zetten
         etFirstname.setText(firstname);
         etLastname.setText(lastname);
-        tvBirthdate.setText(birthdate);
+        String birthdateString = "Geboortedatum: " + date;
+        tvBirthdate.setText(birthdateString);
         etAddress.setText(address);
         etPostalCode.setText(postalCode);
         etCity.setText(city);
+        String telephoneString = "0" + telephone;
         etTelephone.setText(telephoneString);
         etInstrument.setText(instrument);
 
@@ -152,13 +172,14 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
 
     private void updateMember() {
         if (checkUserInputValidity()) {
-            InitializeMember();
-            databaseHelper.updateMember(member);
+           InitializeMember();
 
-            Toast.makeText(UpdateActivity.this, member.getFirstname() + " " + member.getLastname() + " is gewijzigd", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "Member updated successfully");
+           new FirebaseDatabaseHelper().updateMember(member);
 
-            goToDetailsActivity();
+           Toast.makeText(UpdateActivity.this, member.getFirstname() + " " + member.getLastname() + " is gewijzigd", Toast.LENGTH_LONG).show();
+           Log.i(TAG, "Member updated successfully");
+
+           goToMemberListActivity();
         }
     }
 
@@ -234,13 +255,14 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void InitializeMember() {
+        member = new Member();
         member.setMemberId(memberId);
         member.setFirstname(etFirstname.getText().toString().trim());
         member.setLastname(etLastname.getText().toString().trim());
         member.setAddress(etAddress.getText().toString().trim());
         String birthdateTextView = tvBirthdate.getText().toString().trim();
-        birthdateTextView = birthdateTextView.substring(15);
-        member.setBirthdate(birthdateTextView);
+        date = birthdateTextView.substring(15);
+        member.setBirthdate(date);
         member.setPostalCode(etPostalCode.getText().toString().trim());
         member.setCity(etCity.getText().toString().trim());
         member.setTelephone(Long.parseLong(etTelephone.getText().toString().trim()));
@@ -263,10 +285,8 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         Log.i(TAG, "Date selected successfully");
         dateSelected = true;
         tvBirthdate.setError(null);
-        String date = "" + dayOfMonth + "/" + (month + 1) + "/" + year;
+        date = "" + dayOfMonth + "/" + (month + 1) + "/" + year;
         String result = "Geboortedatum: " + date;
-
-        member.setBirthdate(date);
         tvBirthdate.setText(result);
     }
 
@@ -318,22 +338,8 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void goToDetailsActivity() {
-        // Intent aanmaken
-        Intent intentToDetailsActivity = new Intent(UpdateActivity.this, DetailActivity.class);
-
-        // Gegevens meegeven aan de intent
-        intentToDetailsActivity.putExtra("memberId", member.getMemberId());
-        intentToDetailsActivity.putExtra("firstname", member.getFirstname());
-        intentToDetailsActivity.putExtra("lastname", member.getLastname());
-        intentToDetailsActivity.putExtra("birthdate", member.getBirthdate());
-        intentToDetailsActivity.putExtra("address", member.getAddress());
-        intentToDetailsActivity.putExtra("postalCode", member.getPostalCode());
-        intentToDetailsActivity.putExtra("city", member.getCity());
-        intentToDetailsActivity.putExtra("telephone", member.getTelephone());
-        intentToDetailsActivity.putExtra("instrument", member.getInstrument());
-
-        // Intent opstarten
+    private void goToMemberListActivity() {
+        Intent intentToDetailsActivity = new Intent(UpdateActivity.this, MemberListActivity.class);
         startActivity(intentToDetailsActivity);
     }
 }

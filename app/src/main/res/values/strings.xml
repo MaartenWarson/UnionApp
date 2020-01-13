@@ -3,14 +3,14 @@
 
     <!-- Navigation Menu -->
     <string name="menu_home">Home</string>
-    <string name="menu_show_members">Toon leden</string>
+    <string name="menu_show_members">Leden</string>
     <string name="menu_add_member">Voeg lid toe</string>
     <string name="menu_logout">Meld af</string>
     <string name="title_activity_home_drawer">HomeDrawerActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="showMembers">Toon leden</string>
+    <string name="showMembers">Leden</string>
     <string name="insertMember">Voeg lid toe</string>
     <string name="logout">Meld af</string>
     <string name="action_settings">Instellingen</string>
@@ -58,6 +58,7 @@
     <string name="button_update">Wijzig</string>
     <string name="button_delete">Verwijder</string>
     <string name="dummyData">Dummy</string>
+    <string name="chooseMember">Kies een lid waarvan je de gegevens wilt bekijken.</string>
 
     <!-- UpdateActivity -->
     <string name="btnUpdate">Wijzig</string>
@@ -69,4 +70,7 @@
     <string name="preferencesPassword">be.pxl.unionapp.password</string>
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

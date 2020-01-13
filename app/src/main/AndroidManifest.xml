@@ -11,6 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.masterdetail.MemberDetailActivity"></activity>
+        <activity android:name=".activities.masterdetail.MemberListActivity" />
 
         <service android:name=".services.MyFirebaseMessagingService">
             <intent-filter>

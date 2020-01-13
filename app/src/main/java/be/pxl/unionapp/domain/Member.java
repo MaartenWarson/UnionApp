@@ -83,7 +83,6 @@ public class Member {
         return instrument;
     }
 
-    public void setInstrument(String instrument) {
-        this.instrument = instrument;
-    }
+    public void setInstrument(String instrument) { this.instrument = instrument; }
+
 }

@@ -6,7 +6,7 @@
     android:background="@drawable/background_color"
     android:orientation="vertical">
 
-    <!-- DEZE ACTIVITY WORDT NIET MEER GEBRUIKT => activity_member_detail/fragment_member_detail -->
+    <!-- Detailvenster in PORTRAIT -->
 
     <!-- LinearLayout die de gegevens van het lid bevat (= linkse kolom van scherm) -->
     <LinearLayout

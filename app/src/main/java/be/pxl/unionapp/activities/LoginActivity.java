@@ -2,13 +2,11 @@ package be.pxl.unionapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,18 +25,16 @@ import be.pxl.unionapp.R;
 // Activity om als gebruiker aan te melden
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     EditText etEmail, etPassword;
+    String email, password;
     Button btnLogin;
     TextView tvNoAccount;
     CheckBox cbRememberMe;
+    ProgressBar progressBar;
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
-    ProgressBar progressBar;
-    String email, password;
     SharedPreferences preferences;
     SharedPreferences.Editor editor; // Om de sharedPreferences op te slaan
     static final String TAG = "LoginActivity";
-
-    Button btnTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +43,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setTitle(R.string.login);
 
         init();
-        Log.i(TAG, "Views initialized successfully");
+        Log.i(TAG, "Initialized successfully");
 
         // OnClickListeners declareren
         btnLogin.setOnClickListener(this);
         tvNoAccount.setOnClickListener(this);
-
-        btnTest.setOnClickListener(this);
     }
 
     private void init() {
@@ -71,8 +65,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         preferences = getSharedPreferences("myApp", Context.MODE_PRIVATE);
         editor = preferences.edit();
         checkSharedPreferences();
-
-        btnTest = findViewById(R.id.btnTest);
     }
 
     private void initializeAuthStateListener() {
@@ -114,9 +106,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         else if (v.getId() == R.id.tvNoAccount) {
             // Naar activity gaan om nieuwe gebruiker aan te maken
             goToSignUpActivity();
-        }
-        else if (v.getId() == R.id.btnTest) {
-            //startActivity(new Intent(LoginActivity.this, ItemListActivity.class));
         }
     }
 

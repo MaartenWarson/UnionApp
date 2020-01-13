@@ -19,8 +19,10 @@ import com.google.firebase.storage.StorageReference;
 import java.util.List;
 import be.pxl.unionapp.R;
 import be.pxl.unionapp.activities.DetailActivity;
+import be.pxl.unionapp.activities.masterdetail.MemberDetailActivity;
 import be.pxl.unionapp.domain.Member;
 
+// DEZE RECYCLERVIEW WORDT NIET MEER GEBRUIKT => MemberListActivity
 public class RecyclerView_Config {
     private Context context;
     private MembersAdapter membersAdapter;

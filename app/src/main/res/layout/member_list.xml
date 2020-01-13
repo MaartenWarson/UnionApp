@@ -4,8 +4,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_color">
 
-    <!-- WORDT NIET MEER GEBRUIKT => activity_member_list -->
-
     <ProgressBar
         android:id="@+id/progressBar_read"
         style="?android:attr/progressBarStyleHorizontal"
@@ -14,9 +12,17 @@
         android:indeterminate="true"
         android:layout_marginTop="-6dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/rv_member_list"
+        android:name="be.pxl.mdtest.ItemListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recyclerview_members" />
+        app:layoutManager="LinearLayoutManager"
+        tools:context=".activities.masterdetail.MemberListActivity"
+        tools:listitem="@layout/member_list_content"
+        android:background="@drawable/background_color"/>
+        <!-- Ieder item wordt gevuld met member_list_content -->
 
 </LinearLayout>
