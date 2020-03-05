@@ -2,11 +2,17 @@ package be.pxl.unionapp.activities.masterdetail;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,6 +25,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import be.pxl.unionapp.R;
+import be.pxl.unionapp.activities.MainActivity;
 import be.pxl.unionapp.activities.UpdateActivity;
 import be.pxl.unionapp.data.FirebaseDatabaseHelper;
 import be.pxl.unionapp.domain.Member;
@@ -31,7 +38,7 @@ public class MemberDetailActivity extends AppCompatActivity implements View.OnCl
     long telephone;
     Member member;
     StorageReference storageReference;
-    ImageView ivProfilePicture;
+    ImageView ivProfilePicture, ivGoogleMaps, ivPhoneCall;
     private static final String TAG = "DetailActivity";
 
     @Override
@@ -60,6 +67,8 @@ public class MemberDetailActivity extends AppCompatActivity implements View.OnCl
         // OnClickListeners declareren
         btnUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
+        ivGoogleMaps.setOnClickListener(this);
+        ivPhoneCall.setOnClickListener(this);
     }
 
     // Wanneer er op het pijltje in de ActionBar wordt geklikt ...
@@ -85,6 +94,8 @@ public class MemberDetailActivity extends AppCompatActivity implements View.OnCl
         tvInstrument = findViewById(R.id.instrument_database);
         btnUpdate = findViewById(R.id.btnUpdate);
         btnDelete = findViewById(R.id.btnDelete);
+        ivGoogleMaps = findViewById(R.id.ivGoogleMaps);
+        ivPhoneCall = findViewById(R.id.ivPhoneCall);
         storageReference = FirebaseStorage.getInstance().getReference();
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
     }
@@ -152,6 +163,10 @@ public class MemberDetailActivity extends AppCompatActivity implements View.OnCl
             Log.i(TAG, "Delete: Member initialized successfully");
 
             createDeleteDialog(member.getMemberId());
+        } else if (v.getId() == R.id.ivGoogleMaps) {
+            openGoogleMaps();
+        } else if (v.getId() == R.id.ivPhoneCall) {
+            makePhoneCall();
         }
     }
 
@@ -238,5 +253,25 @@ public class MemberDetailActivity extends AppCompatActivity implements View.OnCl
                 Log.i(TAG, "Profilepicture deleted successfully");
             }
         });
+    }
+
+    // Google Maps openen op adres van het lid
+    private void openGoogleMaps() {
+        String locationUri = "https://www.google.com/maps/search/?api=1&query=";
+        locationUri += address + "+";
+        locationUri += city;
+
+        Uri uri = Uri.parse(locationUri);
+        Intent intentToGoogleMaps = new Intent(android.content.Intent.ACTION_VIEW, uri);
+
+        startActivity(intentToGoogleMaps);
+    }
+
+    // Telefoneren
+    private void makePhoneCall() {
+        String phoneNumber = "0" + telephone;
+        Intent intentToMakePhoneCall = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+
+        startActivity(intentToMakePhoneCall);
     }
 }

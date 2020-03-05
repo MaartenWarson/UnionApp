@@ -6,7 +6,7 @@
     android:background="@drawable/background_color"
     android:orientation="vertical">
 
-        <!-- De gegevens van de leden onder elkaar -->
+        <!-- Details van member in LANDSCAPE MODE -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -208,6 +208,21 @@
                     android:background="@color/darkred"
                     android:text="@string/button_delete"
                     android:textColor="@color/lightgray" />
+
+                <ImageView
+                    android:id="@+id/ivPhoneCall"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/phone_call"
+                    android:layout_marginTop="17dp"
+                    android:layout_marginStart="30dp"/>
+
+                <ImageView
+                    android:id="@+id/ivGoogleMaps"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/google_maps_logo"
+                    android:layout_marginTop="17dp" />
             </LinearLayout>
         </LinearLayout>
 </ScrollView>

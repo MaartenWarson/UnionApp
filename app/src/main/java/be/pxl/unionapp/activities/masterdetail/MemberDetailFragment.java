@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,9 +30,10 @@ import be.pxl.unionapp.domain.Member;
 public class MemberDetailFragment extends Fragment implements  View.OnClickListener {
     private Member member;
     private TextView tvFirstname, tvLastname, tvBirthdate, tvAddress, tvPostalCode, tvCity, tvTelephone, tvInstrument;
-    private ImageView ivProfilePicture;
+    private ImageView ivProfilePicture, ivGoogleMaps, ivPhoneCall;
     private Button btnUpdate, btnDelete;
     private static final String TAG = "MemberDetailFragment";
+    private String address, city, telephone;
 
     public MemberDetailFragment() {
     }
@@ -60,6 +62,8 @@ public class MemberDetailFragment extends Fragment implements  View.OnClickListe
         // OnClickListeners declareren
         btnUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
+        ivGoogleMaps.setOnClickListener(this);
+        ivPhoneCall.setOnClickListener(this);
 
         return rootView;
     }
@@ -74,6 +78,8 @@ public class MemberDetailFragment extends Fragment implements  View.OnClickListe
         tvTelephone = root.findViewById(R.id.telephone_database);
         tvInstrument = root.findViewById(R.id.instrument_database);
         ivProfilePicture = root.findViewById(R.id.ivProfilePicture);
+        ivGoogleMaps = root.findViewById(R.id.ivGoogleMaps);
+        ivPhoneCall = root.findViewById(R.id.ivPhoneCall);
         btnUpdate = root.findViewById(R.id.btnUpdate);
         btnDelete = root.findViewById(R.id.btnDelete);
     }
@@ -104,6 +110,11 @@ public class MemberDetailFragment extends Fragment implements  View.OnClickListe
         String telephoneString = "0" + member.getTelephone();
         tvTelephone.setText(telephoneString);
         tvInstrument.setText(member.getInstrument());
+
+        // Variabelen initialiseren voor Google Maps-link
+        address = member.getAddress();
+        city = member.getCity();
+        telephone = "0" + member.getTelephone();
 
         fillImageView();
     }
@@ -138,6 +149,12 @@ public class MemberDetailFragment extends Fragment implements  View.OnClickListe
             Log.i(TAG, "Delete-button clicked");
 
             createDeleteDialog(member.getMemberId());
+        } else if (v.getId() == R.id.ivGoogleMaps) {
+            // Google Maps openen
+            openGoogleMaps();
+        } else if (v.getId() == R.id.ivPhoneCall) {
+            // Telefoneren
+            makePhoneCall();
         }
     }
 
@@ -211,5 +228,24 @@ public class MemberDetailFragment extends Fragment implements  View.OnClickListe
                 Log.i(TAG, "Profilepicture deleted successfully");
             }
         });
+    }
+
+    // Google Maps openen
+    private void openGoogleMaps() {
+        String locationUri = "https://www.google.com/maps/search/?api=1&query=";
+        locationUri += address + "+";
+        locationUri += city;
+
+        Uri uri = Uri.parse(locationUri);
+        Intent intentToGoogleMaps = new Intent(android.content.Intent.ACTION_VIEW, uri);
+
+        startActivity(intentToGoogleMaps);
+    }
+
+    // Telefoneren
+    private void makePhoneCall() {
+        Intent intentToMakePhoneCall = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + telephone));
+
+        startActivity(intentToMakePhoneCall);
     }
 }
