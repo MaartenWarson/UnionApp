@@ -12,6 +12,7 @@
         android:indeterminate="true"
         android:layout_marginTop="-6dp" />
 
+    <!-- listitem: deze RV is gevuld met veel verschillende listitems die in member_list_content staan -->
     <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -23,6 +24,5 @@
         tools:context=".activities.masterdetail.MemberListActivity"
         tools:listitem="@layout/member_list_content"
         android:background="@drawable/background_color"/>
-        <!-- Ieder item wordt gevuld met member_list_content -->
 
 </LinearLayout>

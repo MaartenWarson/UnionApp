@@ -23,14 +23,14 @@ public class FirebaseDatabaseHelper {
     }
 
     public FirebaseDatabaseHelper(String memberId) {
-        databaseReference = FirebaseDatabase.getInstance().getReference("Members").child(memberId);
+        databaseReference = FirebaseDatabase.getInstance().getReference("Members").child(memberId); // Bepaalde member uit database halen
     }
 
     public void addMember(Member member) {
         String id = databaseReference.push().getKey(); // push() creëert een unieke string in 'Members' in Firebase
         member.setMemberId(id);
 
-        databaseReference.child(id).setValue(member);
+        databaseReference.child(id).setValue(member); // Member toevoegen aan database
     }
 
     public void updateMember(Member member) {

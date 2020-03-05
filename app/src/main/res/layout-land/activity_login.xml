@@ -33,7 +33,7 @@
         android:textSize="22sp"
         style="@style/editTextDisableEnter"
         android:imeOptions="flagNoExtractUi" />
-    <!-- Laatste regel zorgt ervoor dat niet een fullscreen keyboard getoond wordt -->
+    <!-- Laatste regel hierboven zorgt ervoor dat niet een fullscreen keyboard getoond wordt -->
 
     <EditText
         android:id="@+id/etPassword"

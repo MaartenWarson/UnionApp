@@ -8,13 +8,14 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <!-- Deze vormt de MainActivity inclusief sandwichmenu -->
-
+    <!-- Volledige Activity (incl. navigatie, bar bovenaan, inhoud van de pagina die getoond wordt => layout) -->
     <include
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- Navigatiemenu (links) -->
+    <!-- Layout_gravity: staat links | headerLayout: header van navigatiebalk | menu: icons + tekst van de verschillende knoppen -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

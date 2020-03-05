@@ -42,8 +42,11 @@ public class MemberDetailActivity extends AppCompatActivity implements View.OnCl
         Log.i(TAG, "Views created successfully");
 
         // Als de oriëntatie van deze Activity wijzigt naar LANDSCAPE, wordt de gebruiker naar MemberListActivity gestuurd
+        // => als de oriëntatie wijzigt, wordt deze Activity helemaal opnieuw opgebouwd en komt deze sowieso opnieuw in deze
+        // onCreate()-methode => er wordt gecheckt wat de oriëntatie is
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Log.i(TAG, "Activity put in landscape");
+
             Intent intentToMemberListActivity = new Intent(MemberDetailActivity.this, MemberListActivity.class);
             startActivity(intentToMemberListActivity);
         }
@@ -54,6 +57,7 @@ public class MemberDetailActivity extends AppCompatActivity implements View.OnCl
         fillFieldsWithData();
         Log.i(TAG, "Fields filled successfully");
 
+        // OnClickListeners declareren
         btnUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
     }
@@ -187,7 +191,7 @@ public class MemberDetailActivity extends AppCompatActivity implements View.OnCl
         alertDialog.setMessage("Weet je zeker dat je " + member.getFirstname() + " " + member.getLastname() + " wilt verwijderen?");
         alertDialog.setCancelable(false);
 
-        // Mogelijke knoppen (JA/NEE)
+        // Mogelijke knoppen (JA/NEE) | Als er op 'Ja' geklikt wordt, wordt onderstaande OnClick()-methode uitgevoerd
         alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -197,6 +201,7 @@ public class MemberDetailActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
+        // Als er op 'Nee' geklikt wordt, gebeurt niks
         alertDialog.setNegativeButton("Nee", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -204,7 +209,7 @@ public class MemberDetailActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-        alertDialog.create().show();
+        alertDialog.create().show(); // Hier wordt het popup-venster écht getoond zoals hierboven geconfigureerd
     }
 
     // Lid verwijderen uit database

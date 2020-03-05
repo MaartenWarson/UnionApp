@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import be.pxl.unionapp.R;
 
-// Hier worden de Fragments (Home, Read, Insert, Logout) in vervat
+// Hier worden de Fragments in vervat
 public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     DrawerLayout drawer;
@@ -32,20 +32,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        toolbar = findViewById(R.id.toolbar); // Staat in app_bar_main.xml
+        // Navigatie + toolbar initialiseren
+        toolbar = findViewById(R.id.toolbar); // Staat in app_bar_main.xml (= toolbar bovenaan scherm)
+        drawer = findViewById(R.id.drawer_layout); // id van activity_main (= volledige MainActivity)
+        navigationView = findViewById(R.id.nav_view); // Staat in activity_main.xml (= Navigation)
         setSupportActionBar(toolbar);
-        drawer = findViewById(R.id.drawer_layout); // id van activity_main
-        navigationView = findViewById(R.id.nav_view); // Staat in activity_main.xml
 
+        // Navigatiebar met de 4 knoppen builden
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_show_members, R.id.nav_add_member, R.id.nav_logout)
                 .setDrawerLayout(drawer)
                 .build();
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment); // Staat in content_main
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment); // Staat in content_main (is Fragment waar de pagina's in getoond gaan worden)
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
-    // Settings Menu (nog implementeren)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);

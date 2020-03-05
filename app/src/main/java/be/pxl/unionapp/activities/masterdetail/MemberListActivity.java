@@ -29,7 +29,7 @@ import be.pxl.unionapp.domain.Member;
 /*
  * Deze activity is de lijst met members en neemt 2 'versies' aan:
  * Portait => MemberDetailActivity
- * Landscape => MemberDetaiLFragment
+ * Landscape => MemberDetailFragment
  */
 public class MemberListActivity extends AppCompatActivity {
     private boolean twoPanes;
@@ -44,17 +44,17 @@ public class MemberListActivity extends AppCompatActivity {
         // Titel van Actionbar instellen
         setTitle(R.string.showMembers);
 
-        if (checkLandscapeMode()) {
+        if (checkLandscapeMode()) { // Hulpmethode
             Log.i(TAG, "In landscape mode");
             twoPanes = true;
         }
 
-        // Recyclerview declareren en implementeren om lijst te maken
+        // 1. Recyclerview declareren en implementeren om lijst te maken (RV staat in member_list.xml)
         View recyclerView = findViewById(R.id.rv_member_list);
-        assert recyclerView != null;
+        assert recyclerView != null; // Als er een RV is, ...
         Log.i(TAG, "Recyclerview declared");
 
-        readMembers((RecyclerView) recyclerView);
+        readMembers((RecyclerView) recyclerView); // Members lezen uit DB
     }
 
     // Wanneer er op het pijltje in de ActionBar wordt geklikt ...
@@ -94,26 +94,30 @@ public class MemberListActivity extends AppCompatActivity {
 
                 findViewById(R.id.progressBar_read).setVisibility(View.GONE);
 
-                setupRecyclerView(recyclerView, members, keys);
+                setupRecyclerView(recyclerView, members, keys); // RV, members en keys meegeven
             }
         });
     }
 
+    // Opgevraagde members in de RV zetten
     private void setupRecyclerView(@NonNull RecyclerView recyclerView, List<Member> members, List<String> keys) {
+        // 2. Adapter instellen voor RV (Adapter-object aanmaken dat meegegeven moet worden)
         recyclerView.setAdapter(new MemberRecyclerViewAdapter(this, members, keys, twoPanes ));
 
         Log.i(TAG, "Adapter set to RecyclerView successfully");
     }
 
 
+    // Inner class (Adapter => om nieuwe schermelementen te maken)
     public static class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecyclerViewAdapter.ViewHolder> {
         private final MemberListActivity parentActivity;
         private final List<Member> members;
         private final List<String> keys;
         private final boolean twoPanes;
 
+        // Constructor
         MemberRecyclerViewAdapter(MemberListActivity parent, List<Member> members, List<String> keys, boolean twoPanes) {
-            this.parentActivity = parent;
+            this.parentActivity = parent; // Deze Activity
             this.members = members;
             this.keys = keys;
             this.twoPanes = twoPanes;
@@ -122,25 +126,25 @@ public class MemberListActivity extends AppCompatActivity {
         }
 
         @NonNull
-        @Override
+        @Override // 3. ViewHolder aanmaken (= layout van ieder item dat in de RV getoont wordt)
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.member_list_content, parent, false);
-            return new ViewHolder(view);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.member_list_content, parent, false); // member_list_content is de View per item
+            return new ViewHolder(view); // VielHolder-object van inner klasse (onderaan) wordt gemaakt
         }
 
-        @Override
+        @Override // 4. Iedere ViewHolder vullen met de juiste data
         public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
            // Per MemberItem in de RecyclerView worden foto, naam en instrument getoond
            // Naam
            String name = members.get(position).getFirstname() + " " + members.get(position).getLastname();
-           holder.tvName.setText(name);
+           holder.tvName.setText(name); // tvName staat in de ViewHolder
 
            // Instrument
            holder.tvInstrument.setText(members.get(position).getInstrument());
 
            // Profielfoto
             final String imageName = members.get(position).getMemberId();
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(imageName);
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(imageName); // Foto met naam 'imageName' nemen
 
             final long ONE_MEGABYTE = 1024 * 1024;
             storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -152,17 +156,18 @@ public class MemberListActivity extends AppCompatActivity {
             });
 
             // OnClickListener op het volledig item zetten
-            holder.itemView.setTag(members.get(position));
-            holder.itemView.setOnClickListener(onClickListener);
+            holder.itemView.setTag(members.get(position)); // Nodig om te bepalen op welke Member straks geklikt wordt
+            holder.itemView.setOnClickListener(onClickListener); // OnClickListener plaatsen op ItemView (Wat gebeurt er dan? => Staat in onClick)
 
             Log.i(TAG, "View within RecyclerViewList created successfully");
         }
 
-        @Override
+        @Override // RV vraagt hoeveel items getoond moeten worden (dit gebeurt eigenlijk als eerste)
         public int getItemCount() {
             return members.size();
         }
 
+        // Wanneer er op een View Item geklikt wordt, gebeurt onderstaande
         private final View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,10 +192,10 @@ public class MemberListActivity extends AppCompatActivity {
                     MemberDetailFragment fragment = new MemberDetailFragment();
                     fragment.setArguments(arguments);
                     parentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.member_detail_landscape, fragment)
+                            .replace(R.id.member_detail_landscape, fragment) // MemberDetailFragment tonen
                             .commit();
                 } else {
-                    // PORTRAIT
+                    // PORTRAIT (wanneer geklikt wordt op een ViewItem => Activity naar MemberDetailActicity)
                     Context context = v.getContext();
                     Intent intentToMemberDetailActivity = new Intent(context, MemberDetailActivity.class);
 
@@ -211,6 +216,7 @@ public class MemberListActivity extends AppCompatActivity {
             }
         };
 
+        // Inner class met ViewHolder layout (eigenlijk is dit zogezegd een kleine Activity)
         class ViewHolder extends RecyclerView.ViewHolder {
             ImageView ivProfilePicture;
             TextView tvName, tvInstrument;

@@ -53,10 +53,12 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         init();
         Log.i(TAG, "Initialized successfully");
 
+        // OnClickListeners declareren
         tvDisplayDate.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
         ivProfilePicture.setOnClickListener(this);
 
+        // Als er een savedInstanceState is, worden de opgeslagen waardes hiervan in de juiste variabelen gezet
         if (savedInstanceState != null) {
             restoreSavedInstanceStates(savedInstanceState);
 
@@ -83,7 +85,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         storageReference = FirebaseStorage.getInstance().getReference();
     }
 
-    // Sla instance states op bij het wijzigen van orientation
+    // Sla instance states automatisch op bij het wijzigen van orientation
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -112,7 +114,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         image = savedInstanceState.getParcelable("my_profilepicture");
         if (image != null) {
             ivProfilePicture.setImageURI(image);
-            tvImageSelector.setVisibility(View.INVISIBLE);
+            tvImageSelector.setVisibility(View.INVISIBLE); // De tekst om een foto te selecteren
         }
 
         Log.i(TAG, "All instances restored successfully");
@@ -158,7 +160,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         Log.i(TAG, "Date selected successfully");
 
         dateSelected = true;
-        tvDisplayDate.setError(null);
+        tvDisplayDate.setError(null); // ALS er een error-message was, wordt deze verwijderd wanneer een datum geselecteerd is
 
         date = "" + dayOfMonth + "/" + (month + 1) + "/" + year;
 
@@ -171,10 +173,11 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
             InitializeMember();
             Log.i(TAG, "Member initialized successfully");
 
-            // Lid toevoegen aan database
+            // Lid toevoegen aan database (d.m.v. FirebaseDatabaseHelper)
             databaseHelper.addMember(member);
             Log.i(TAG, "Member added to Firebase Database successfully");
 
+            // Profielfoto niet in de database zetten (zoals stap hierboven), maar aan Firebase storage toevoegen
             uploadProfilePicture();
 
             // Wanneer lid succesvol is toegevoegd aan database...
@@ -183,6 +186,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
         }
     }
 
+    // Wanneer een input niet geldig is, wordt een foutmelding getoond
     private boolean checkUserInputValidity() {
         boolean inputIsValid = true;
 
@@ -211,7 +215,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
 
         boolean postalCodeIsNumber = true;
         try {
-            Integer.parseInt(etPostalCode.getText().toString());
+            Integer.parseInt(etPostalCode.getText().toString()); // Als de postcode niet omgezet kan worden naar een int, bevat deze ongeldige tekens
         } catch (NumberFormatException e) {
             postalCodeIsNumber = false;
         }
@@ -301,7 +305,7 @@ public class InsertFragment extends Fragment implements View.OnClickListener, Da
     // Profielfoto uploaden naar Firebase Storage
     private void uploadProfilePicture() {
         if (image != null) {
-            String pictureName = member.getMemberId();
+            String pictureName = member.getMemberId(); // Fotonaam = id van member
             storageReference = storageReference.child(pictureName);
 
             storageReference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

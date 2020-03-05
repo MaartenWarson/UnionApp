@@ -37,7 +37,7 @@ public class SignUpActivity extends AppCompatActivity  implements View.OnClickLi
         init();
         Log.i(TAG, "Views initialized successfully");
 
-        // OnClickListeners declareren
+        // OnClickListeners declareren voor Button en TextView
         btnSignUp.setOnClickListener(this);
         tvAlreadyAccount.setOnClickListener(this);
     }
@@ -88,7 +88,7 @@ public class SignUpActivity extends AppCompatActivity  implements View.OnClickLi
     }
 
     private void signUp() {
-        // Gebruiker toevoegen
+        // Gebruiker toevoegen in FireBase
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -100,6 +100,7 @@ public class SignUpActivity extends AppCompatActivity  implements View.OnClickLi
                 else {
                     // Als gebruiker toegevoegd is, word je verder gestuurd naar HomeActivity
                     Log.i(TAG, "Account created successfully");
+                    progressBar.setVisibility(View.INVISIBLE);
                     Intent intentToMainActivity = new Intent(SignUpActivity.this, MainActivity.class);
                     startActivity(intentToMainActivity);
                 }

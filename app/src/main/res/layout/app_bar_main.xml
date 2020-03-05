@@ -6,7 +6,6 @@
     tools:context=".activities.MainActivity">
 
     <!-- Toont de ToolBar bovenaan het scherm (bij de Fragments) -->
-
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -16,9 +15,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Fragment waarin inhoud getoond wordt -->
     <include layout="@layout/content_main" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

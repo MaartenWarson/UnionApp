@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import be.pxl.unionapp.R;
 
-// Activity om als gebruiker aan te melden
+// Activity om als bestaande gebruiker aan te melden | OnClickListener gaat luisteren wanneer er ergens op geklikt wordt
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     EditText etEmail, etPassword;
     String email, password;
@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         init();
         Log.i(TAG, "Initialized successfully");
 
-        // OnClickListeners declareren
+        // OnClickListeners declareren voor Button en TextView
         btnLogin.setOnClickListener(this);
         tvNoAccount.setOnClickListener(this);
     }
@@ -56,17 +56,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnLogin = findViewById(R.id.btnLogin);
         tvNoAccount = findViewById(R.id.tvNoAccount);
         cbRememberMe = findViewById(R.id.cbRememberMe);
-        firebaseAuth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.progressBar);
 
+        // FirebaseAuth initialiseren is nodig voor de authenticatie (= aanmelden) van de gebruiker
+        firebaseAuth = FirebaseAuth.getInstance();
         initializeAuthStateListener();
 
-        // Preferences
+        // Shared preferences ("myApp" is de naam van de Preference File | Private: kan enkel door deze applicatie gebruikt worden)
         preferences = getSharedPreferences("myApp", Context.MODE_PRIVATE);
-        editor = preferences.edit();
+        editor = preferences.edit(); // Editor is nodig om gegevens op te slaan in de Shared Preference
         checkSharedPreferences();
     }
 
+    // Gaat 'luisteren' naar veranderingen in de credentials
     private void initializeAuthStateListener() {
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -81,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void checkSharedPreferences() {
-        // De geneste getString() neemt de string van strings.xml (dit zijn de keys)
+        // De getString() neemt de string van strings.xml (dit zijn de keys)
         String prCheckbox = preferences.getString(getString(R.string.preferencesCheckbox), "False");
         String prEmail = preferences.getString(getString(R.string.preferencesEmail), "");
         String prPassword = preferences.getString(getString(R.string.preferencesPassword), "");
@@ -119,7 +121,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.e(TAG, "Fields not filled in correctly");
         }
         else if (email.isEmpty()) {
-            etEmail.setError("Geef een e-mailadres in");
+            etEmail.setError("Geef een e-mailadres in"); // ErrorMessage bij dit tekstvak
             etEmail.requestFocus(); // Focus leggen op deze EditText
             Log.e(TAG, "Fields not filled in correctly");
         }
@@ -129,13 +131,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.e(TAG, "Fields not filled in correctly");
         }
         else {
-            // SharedPreferences opslaan
+            // SharedPreferences opslaan (wanneer credentials juist zijn ingegeven)
             saveValuesForSharedPreferences(email, password);
-            // Wanneer alles goed is ingevuld, wordt de BackgroundExecuter uitgevoerd om ervoor te zorgen dat de Progressbar goed getoond wordt
+
+            // Wanneer alles goed is ingevuld, wordt de BackgroundExecuter (klasse in deze Activity-klasse) uitgevoerd (= Background Thread) om ervoor te zorgen dat de Progressbar goed getoond wordt
             new BackgroundExecuter().execute();
         }
     }
 
+    // Slaat de credentials op in de SharedPreference
     private void saveValuesForSharedPreferences(String email, String password) {
         if (cbRememberMe.isChecked()) {
             // Sla waarde 'true' van CheckBox op
@@ -150,7 +154,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             editor.putString(getString(R.string.preferencesPassword), password);
             editor.commit();
         } else {
-            // Sla waarde 'true' van CheckBox op
+            // Sla waarde 'false' van CheckBox op
             editor.putString(getString(R.string.preferencesCheckbox), "False");
             editor.commit();
 
@@ -167,17 +171,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void login() {
-        // Gebruiker toevoegen
+        // Aanmelden van gebruiker | CompleteListener gaat de onComplete-methode uitvoeren wanneer de signIn-methode uitgevoerd is
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                // Login NIET succesvol
                 if (!task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Gebruikersnaam en/of wachtwoord zijn incorrect. Probeer opnieuw", Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.INVISIBLE);
                     Log.e(TAG, "Something went wrong logging in");
                 }
+                // Login succesvol
                 else {
                     Log.i(TAG, "Logged in successfully");
+                    progressBar.setVisibility(View.INVISIBLE);
                     Intent intentToMainActivityToMainActivity = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intentToMainActivityToMainActivity);
                 }
@@ -190,28 +197,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivity(intentToSignUpActivity);
     }
 
-    @Override
+    @Override // Wordt opgeroepen na OnCreate (wanneer de Activity zichtbaar wordt voor de gebruiker)
     protected void onStart() {
         super.onStart();
         firebaseAuth.addAuthStateListener(authStateListener);
     }
 
+    // Deze voert een achtergrondtaak uit (Background Thread)
     public class BackgroundExecuter extends AsyncTask<String, Void, Void> {
-        // VOOR het uitvoeren van de taak
+        // VOOR het uitvoeren van de taak (uitgevoerd in Main Thread)
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
         }
 
-        // UITVOEREN van de taak
+        // UITVOEREN van de taak (uitgevoerd in Background Thread = op de achtergrond)
         @Override
         protected Void doInBackground(String... strings) {
             login();
             return null;
         }
 
-        // NA het uitvoeren van de taak
+        // NA het uitvoeren van de taak (geen speciale implementatie voor deze app) (uitgevoerd in Main Thread)
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);

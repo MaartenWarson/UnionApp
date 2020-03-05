@@ -57,6 +57,7 @@ public class MemberDetailFragment extends Fragment implements  View.OnClickListe
             Log.i(TAG, "Fields filled successfully");
         }
 
+        // OnClickListeners declareren
         btnUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
 

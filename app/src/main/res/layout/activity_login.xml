@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/loginActivity"
@@ -8,6 +9,7 @@
     android:orientation="vertical"
     tools:context=".activities.LoginActivity">
 
+    <!-- Laadbalk | style: horizontaal (geen rondje) | indeterminate: loopt constant -->
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -17,14 +19,15 @@
         android:indeterminate="true"
         android:visibility="invisible" />
 
+    <!-- backgrounTint: kleur van de lijn | style: verwijst naar custom style in res/values/styles/styles.xml-->
     <EditText
         android:id="@+id/etEmail"
+        android:hint="@string/email"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="180dp"
         android:backgroundTint="@color/lightgray"
-        android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:textAlignment="center"
         android:textColor="@color/lightgray"
@@ -35,11 +38,11 @@
 
     <EditText
         android:id="@+id/etPassword"
+        android:hint="@string/password"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:backgroundTint="@color/lightgray"
-        android:hint="@string/password"
         android:inputType="textPassword"
         android:textAlignment="center"
         android:textColor="@color/lightgray"

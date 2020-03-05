@@ -18,6 +18,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import be.pxl.unionapp.R;
 import be.pxl.unionapp.activities.MainActivity;
 
+// Klasse om notification verstuurd via FireBase af te handelen
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static int NOTIFICATION_ID = 1;
 

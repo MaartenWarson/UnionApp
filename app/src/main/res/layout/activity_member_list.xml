@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.masterdetail.MemberListActivity">
 
-    <!-- DIT IS DE LIJST WAAR EEN RECYCLERVIEW IN STAAT WAAR MEMBERS IN STAAN -->
+    <!-- DIT IS DE ACTIVITY WAAR EEN RECYCLERVIEW IN STAAT WAAR MEMBERS IN STAAN -->
 
     <FrameLayout
         android:layout_width="match_parent"

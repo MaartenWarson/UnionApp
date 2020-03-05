@@ -32,6 +32,7 @@ import be.pxl.unionapp.activities.masterdetail.MemberListActivity;
 import be.pxl.unionapp.data.FirebaseDatabaseHelper;
 import be.pxl.unionapp.domain.Member;
 
+// In deze Activity staan de gegevens van het lid al ingevuld. Deze kunnen aangepast worden
 public class UpdateActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener{
 
     Button btnUpdate;
@@ -59,6 +60,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
 
         fillFieldsWithData();
 
+        // OnClickListeners declareren
         btnUpdate.setOnClickListener(this);
         tvBirthdate.setOnClickListener(this);
         ivProfilePicture.setOnClickListener(this);
@@ -83,6 +85,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         storageReference = FirebaseStorage.getInstance().getReference();
     }
 
+    // Data opslaan bij draaien van scherm
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -91,6 +94,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         outState.putString("my_birthdate", date);
     }
 
+    // Data in variabelen zetten bij draaien van scherm
     private void restoreSavedInstanceStates(Bundle savedInstanceState) {
         // Gewijzigde geboortedatum
         date = savedInstanceState.getString("my_birthdate");
@@ -134,7 +138,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         String imageName = memberId;
         StorageReference storageRef = storageReference.child(imageName);
 
-        final long ONE_MEGABYTE = 1024 * 1024;
+        final long ONE_MEGABYTE = 1024 * 1024; // Max formaat van foto
         storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
@@ -159,7 +163,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    // Wanneer er op het pijltje in de ActionBar wordt geklikt ...
+    // Wanneer er op het pijltje (terug) in de ActionBar wordt geklikt ...
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
