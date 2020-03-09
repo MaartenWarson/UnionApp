@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import be.pxl.unionapp.MapsActivity;
 import be.pxl.unionapp.R;
 import be.pxl.unionapp.activities.UpdateActivity;
 import be.pxl.unionapp.data.FirebaseDatabaseHelper;
@@ -33,7 +35,7 @@ public class MemberDetailFragment extends Fragment implements  View.OnClickListe
     private ImageView ivProfilePicture, ivGoogleMaps, ivPhoneCall;
     private Button btnUpdate, btnDelete;
     private static final String TAG = "MemberDetailFragment";
-    private String address, city, telephone;
+    private String address, postalCode, city, telephone;
 
     public MemberDetailFragment() {
     }
@@ -111,12 +113,13 @@ public class MemberDetailFragment extends Fragment implements  View.OnClickListe
         tvTelephone.setText(telephoneString);
         tvInstrument.setText(member.getInstrument());
 
+        fillImageView();
+
         // Variabelen initialiseren voor Google Maps-link
         address = member.getAddress();
+        postalCode = member.getPostalCode();
         city = member.getCity();
         telephone = "0" + member.getTelephone();
-
-        fillImageView();
     }
 
     private void fillImageView() {
@@ -232,14 +235,14 @@ public class MemberDetailFragment extends Fragment implements  View.OnClickListe
 
     // Google Maps openen
     private void openGoogleMaps() {
-        String locationUri = "https://www.google.com/maps/search/?api=1&query=";
-        locationUri += address + "+";
-        locationUri += city;
+        Intent intentToMap = new Intent(getContext(), MapsActivity.class);
 
-        Uri uri = Uri.parse(locationUri);
-        Intent intentToGoogleMaps = new Intent(android.content.Intent.ACTION_VIEW, uri);
+        // Gegevens meegeven aan de intent
+        intentToMap.putExtra("address", address);
+        intentToMap.putExtra("postalCode", postalCode);
+        intentToMap.putExtra("city", city);
 
-        startActivity(intentToGoogleMaps);
+        startActivity(intentToMap);
     }
 
     // Telefoneren

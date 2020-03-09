@@ -2,13 +2,8 @@ package be.pxl.unionapp.activities.masterdetail;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,8 +19,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import be.pxl.unionapp.MapsActivity;
 import be.pxl.unionapp.R;
-import be.pxl.unionapp.activities.MainActivity;
 import be.pxl.unionapp.activities.UpdateActivity;
 import be.pxl.unionapp.data.FirebaseDatabaseHelper;
 import be.pxl.unionapp.domain.Member;
@@ -257,14 +252,14 @@ public class MemberDetailActivity extends AppCompatActivity implements View.OnCl
 
     // Google Maps openen op adres van het lid
     private void openGoogleMaps() {
-        String locationUri = "https://www.google.com/maps/search/?api=1&query=";
-        locationUri += address + "+";
-        locationUri += city;
+        Intent intentToMap = new Intent(MemberDetailActivity.this, MapsActivity.class);
 
-        Uri uri = Uri.parse(locationUri);
-        Intent intentToGoogleMaps = new Intent(android.content.Intent.ACTION_VIEW, uri);
+        // Gegevens meegeven aan de intent
+        intentToMap.putExtra("address", address);
+        intentToMap.putExtra("postalCode", postalCode);
+        intentToMap.putExtra("city", city);
 
-        startActivity(intentToGoogleMaps);
+        startActivity(intentToMap);
     }
 
     // Telefoneren
