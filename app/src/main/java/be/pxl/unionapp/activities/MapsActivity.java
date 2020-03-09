@@ -1,30 +1,34 @@
-package be.pxl.unionapp;
+package be.pxl.unionapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import be.pxl.unionapp.R;
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     private String streetAndNumber, postalCode, city, addressString;
     private GoogleMap mMap;
     private static final String TAG = "MapsActivity";
+    private Address address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +60,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        Address address = getAddress();
-        LatLng myLocationLatLng = new LatLng(address.getLatitude(), address.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(myLocationLatLng).title(address.getAddressLine(0)));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocationLatLng, 12.0f));
+        // Address ophalen in achtergrond
+        new BackgroundExecuter().execute();
+
+        if (address == null) {
+            Toast.makeText(MapsActivity.this, "Something went wrong retrieving the address", Toast.LENGTH_LONG).show();
+        }
+        else {
+            LatLng myLocationLatLng = new LatLng(address.getLatitude(), address.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(myLocationLatLng).title(address.getAddressLine(0)));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocationLatLng, 12.0f));
+        }
     }
 
     private Address getAddress() {
@@ -91,5 +102,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Log.e(TAG, "Something went wrong going back to the previous activity");
         return super.onOptionsItemSelected(item);
+    }
+
+    // Deze voert een achtergrondtaak uit (Background Thread)
+    public class BackgroundExecuter extends AsyncTask<String, Void, Void> {
+        // VOOR het uitvoeren van de taak (uitgevoerd in Main Thread)
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        // UITVOEREN van de taak (uitgevoerd in Background Thread = op de achtergrond)
+        @Override
+        protected Void doInBackground(String... strings) {
+            address = getAddress();
+            return null;
+        }
+
+        // NA het uitvoeren van de taak (geen speciale implementatie voor deze app) (uitgevoerd in Main Thread)
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
     }
 }

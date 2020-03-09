@@ -31,7 +31,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps"></activity>
         <activity android:name=".activities.masterdetail.MemberDetailActivity" />
         <activity android:name=".activities.masterdetail.MemberListActivity" />

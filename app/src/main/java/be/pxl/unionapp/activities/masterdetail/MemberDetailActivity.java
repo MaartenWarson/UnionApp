@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import be.pxl.unionapp.MapsActivity;
+import be.pxl.unionapp.activities.MapsActivity;
 import be.pxl.unionapp.R;
 import be.pxl.unionapp.activities.UpdateActivity;
 import be.pxl.unionapp.data.FirebaseDatabaseHelper;
