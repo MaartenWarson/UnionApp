@@ -61,10 +61,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
 
         // Address ophalen in achtergrond
-        new BackgroundExecuter().execute();
+        //new BackgroundExecuter().execute();
+
+        address = getAddress();
 
         if (address == null) {
-            Toast.makeText(MapsActivity.this, "Something went wrong retrieving the address", Toast.LENGTH_LONG).show();
+            Toast.makeText(MapsActivity.this, "Fout bij het ophalen van de locatie", Toast.LENGTH_LONG).show();
         }
         else {
             LatLng myLocationLatLng = new LatLng(address.getLatitude(), address.getLongitude());

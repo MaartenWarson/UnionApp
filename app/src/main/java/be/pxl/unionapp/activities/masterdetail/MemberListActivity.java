@@ -28,7 +28,7 @@ import be.pxl.unionapp.domain.Member;
 
 /*
  * Deze activity is de lijst met members en neemt 2 'versies' aan:
- * Portait => MemberDetailActivity
+ * Portrait => MemberDetailActivity
  * Landscape => MemberDetailFragment
  */
 public class MemberListActivity extends AppCompatActivity {
@@ -129,7 +129,7 @@ public class MemberListActivity extends AppCompatActivity {
         @Override // 3. ViewHolder aanmaken (= layout van ieder item dat in de RV getoont wordt)
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.member_list_content, parent, false); // member_list_content is de View per item
-            return new ViewHolder(view); // VielHolder-object van inner klasse (onderaan) wordt gemaakt
+            return new ViewHolder(view); // ViewHolder-object van inner klasse (onderaan) wordt gemaakt
         }
 
         @Override // 4. Iedere ViewHolder vullen met de juiste data
