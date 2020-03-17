@@ -1,9 +1,28 @@
 # UnionApp
 
-## Introduction
-This application is an Android application built for the subject 'Mobile Development' during my bachelor education at the PXL Hogeschool Hasselt (2019-2020).
+## General Summary
+This goal of this project is to create an Android application to let registered users manage data from members of a union. This could be a music association, youth association, ... Users are able to view, add, update and delete members. It is also possible to directly make a phone call to a member, send a text message to a member or view its location in Google Maps.
 
-## Functionality
-This application is called  **Union App** and its purpose is to keep track on the members of an assocation: music association, youth assocation, ... So you always know who is member of your assocation, where he/she lives, what his/her birthdate is, how to reach him/her by phone, ... You can gain full access to the platform by logging in, after which you can view, edit, create or delete members.
+This functionalities are wrapped in a polished application built with attention for the visual aspect. Both portrait and landscape mode are supported.
 
-This all is wrapped in a polished application built with attention for design, working with a Firebase backend.
+- This application is written in Java.
+- minSdkVersion: 28
+- targetSdkVersion: 29
+
+## Running the project locally
+**Physical Android device**
+1. Set device in Developer Mode
+2. Enable USB debuggin
+3. Connect your Android device to your programming system
+4. Run the project
+
+**Emulator**
+1. Install an emulator with API-level 29
+2. This emulator needs to suppert Play Store
+3. Run the project
+
+## Further Information
+This project consumes a Firebase backend:
+- Firebase Database is used to store data from members
+- Firebase Storage is used to store images
+- Fireabase Cloud Messaging is used to send notifications to the device
